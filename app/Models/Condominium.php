@@ -10,6 +10,8 @@ class Condominium extends Model
 {
     use BelongsToCompany, HasFactory;
 
+    protected $table = 'condominiums';
+
     protected $fillable = ['company_id','name','document','email','phone','status','slug','cep','street','number','complement','district','city','state','mandate_start','mandate_end','administrator_name'];
 
     protected function casts(): array
