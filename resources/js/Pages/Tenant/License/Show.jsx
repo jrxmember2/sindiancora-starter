@@ -9,33 +9,33 @@ export default function Show({ license, statusSummary, usage, alerts }) {
   const moduleGroups = groupModules(license?.modules || []);
 
   return (
-    <AppLayout title="Minha licenca">
-      <Head title="Minha licenca" />
+    <AppLayout title="Minha licença">
+      <Head title="Minha licença" />
 
       <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
         <Card>
           <CardHeader
             title="Leitura contratual"
-            description="Resumo do contrato ativo da empresa atual e do que pode ou nao ser usado na plataforma."
+            description="Resumo do contrato ativo da empresa atual e do que pode ou não ser usado na plataforma."
           />
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Metric label="Contrato" value={license?.contract_number || 'Nao configurado'} icon={ShieldCheck} />
-            <Metric label="Status da licenca" value={statusSummary?.label || 'Sem licenca'} icon={CircleAlert} badgeTone={statusTone(statusSummary?.code)} />
-            <Metric label="Status financeiro" value={labelOrFallback(license?.financial_status)} icon={CalendarClock} />
-            <Metric label="Cobranca" value={labelOrFallback(license?.billing_type)} icon={CalendarClock} />
-            <Metric label="Inicio" value={formatDate(license?.starts_at)} icon={CalendarClock} />
+            <Metric label="Contrato" value={license?.contract_number || 'Não configurado'} icon={ShieldCheck} />
+            <Metric label="Status da licença" value={statusSummary?.label || 'Sem licença'} icon={CircleAlert} badgeTone={statusTone(statusSummary?.code)} />
+            <Metric label="Status financeiro" value={financialStatusLabel(license?.financial_status)} icon={CalendarClock} />
+            <Metric label="Cobrança" value={billingTypeLabel(license?.billing_type)} icon={CalendarClock} />
+            <Metric label="Início" value={formatDate(license?.starts_at)} icon={CalendarClock} />
             <Metric label="Fim" value={formatDate(license?.ends_at)} icon={CalendarClock} />
           </div>
 
           <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
             <p className="text-sm font-semibold text-slate-500">Mensagem contratual</p>
-            <p className="mt-2 text-sm leading-6 text-slate-700">{statusSummary?.message || 'Sem mensagem disponivel.'}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-700">{statusSummary?.message || 'Sem mensagem disponível.'}</p>
           </div>
 
           {license?.notes && (
             <div className="mt-4 rounded-3xl border border-slate-200 bg-white p-5">
-              <p className="text-sm font-semibold text-slate-500">Observacoes comerciais</p>
+              <p className="text-sm font-semibold text-slate-500">Observações comerciais</p>
               <p className="mt-2 text-sm leading-6 text-slate-700">{license.notes}</p>
             </div>
           )}
@@ -48,15 +48,15 @@ export default function Show({ license, statusSummary, usage, alerts }) {
           />
 
           <div className="space-y-5">
-            <UsageMeter label="Condominios ativos" metric={usage?.condominiums} icon={Building2} />
-            <UsageMeter label="Usuarios internos" metric={usage?.internal_users} icon={Users} />
+            <UsageMeter label="Condomínios ativos" metric={usage?.condominiums} icon={Building2} />
+            <UsageMeter label="Usuários internos" metric={usage?.internal_users} icon={Users} />
             <UsageMeter label="Storage" metric={usage?.storage} icon={HardDrive} unit="MB" />
-            <UsageMeter label="Instancias WhatsApp" metric={usage?.whatsapp} icon={MessageSquareMore} />
-            <UsageMeter label="Creditos IA do mes" metric={usage?.ai} icon={Sparkles} />
+            <UsageMeter label="Instâncias WhatsApp" metric={usage?.whatsapp} icon={MessageSquareMore} />
+            <UsageMeter label="Créditos de IA do mês" metric={usage?.ai} icon={Sparkles} />
           </div>
 
           <p className="mt-5 text-xs text-slate-400">
-            Ultima sincronizacao registrada: {usage?.synced_at ? formatDateTime(usage.synced_at) : 'ainda nao registrada'}
+            Última sincronização registrada: {usage?.synced_at ? formatDateTime(usage.synced_at) : 'ainda não registrada'}
           </p>
         </Card>
       </div>
@@ -65,7 +65,7 @@ export default function Show({ license, statusSummary, usage, alerts }) {
         <Card>
           <CardHeader
             title="Alertas contratuais"
-            description="Sinais de vencimento, limite e restricoes da empresa atual."
+            description="Sinais de vencimento, limite e restrições da empresa atual."
           />
 
           <div className="space-y-3">
@@ -86,8 +86,8 @@ export default function Show({ license, statusSummary, usage, alerts }) {
 
         <Card>
           <CardHeader
-            title="Modulos liberados"
-            description="Catalogo do que esta disponivel para a empresa nesta licenca."
+            title="Módulos liberados"
+            description="Catálogo do que está disponível para a empresa nesta licença."
           />
 
           <div className="space-y-5">
@@ -102,7 +102,7 @@ export default function Show({ license, statusSummary, usage, alerts }) {
               </div>
             )) : (
               <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
-                Nenhum modulo foi liberado nesta licenca.
+                Nenhum módulo foi liberado nesta licença.
               </div>
             )}
           </div>
@@ -171,7 +171,7 @@ function groupModules(modules) {
 
 function formatDate(value) {
   if (!value) {
-    return 'Nao informado';
+    return 'Não informado';
   }
 
   const date = new Date(`${value}T00:00:00`);
@@ -197,8 +197,28 @@ function formatDateTime(value) {
   }).format(date);
 }
 
-function labelOrFallback(value) {
-  return value || 'Nao informado';
+function billingTypeLabel(value) {
+  const labels = {
+    monthly: 'Mensal',
+    quarterly: 'Trimestral',
+    yearly: 'Anual',
+    custom: 'Personalizada',
+  };
+
+  return labels[value] || 'Não informado';
+}
+
+function financialStatusLabel(value) {
+  const labels = {
+    current: 'Em dia',
+    due: 'A vencer',
+    overdue: 'Em atraso',
+    negotiated: 'Negociado',
+    suspended: 'Suspenso',
+    canceled: 'Cancelado',
+  };
+
+  return labels[value] || 'Não informado';
 }
 
 function statusTone(code) {

@@ -30,7 +30,7 @@ export default function Index({ issues }) {
       <Card>
         <CardHeader
           title="Chamados"
-          description="Base operacional de ocorrencias, tarefas e cobrancas internas."
+          description="Base operacional de ocorrências, tarefas e cobranças internas."
           action={
             <Button href="/app/issues/create">
               <Plus className="h-4 w-4" /> Novo chamado
@@ -41,26 +41,26 @@ export default function Index({ issues }) {
         <DataTable
           columns={[
             { key: 'subject', label: 'Chamado' },
-            { key: 'condominium', label: 'Condominio' },
+            { key: 'condominium', label: 'Condomínio' },
             { key: 'deadline', label: 'Prazo' },
             { key: 'status', label: 'Status' },
             { key: 'priority', label: 'Prioridade' },
-            { key: 'actions', label: 'Acoes', align: 'right', className: 'w-40' },
+            { key: 'actions', label: 'Ações', align: 'right', className: 'w-40' },
           ]}
           rows={issues.data}
           meta={issues}
           emptyTitle="Nenhum chamado criado"
-          emptyDescription="Abra o primeiro chamado para iniciar a operacao do tenant."
+          emptyDescription="Abra o primeiro chamado para iniciar a operação do tenant."
           renderRow={(issue) => (
             <tr key={issue.id} className="bg-white">
               <td className="px-4 py-4">
                 <p className="font-bold text-slate-900">#{issue.id} - {issue.subject}</p>
-                <p className="text-xs text-slate-500">{issue.shared_with_residents ? 'Compartilhavel com condominos' : 'Uso interno'}</p>
+                <p className="text-xs text-slate-500">{issue.shared_with_residents ? 'Compartilhável com condôminos' : 'Uso interno'}</p>
               </td>
-              <td className="px-4 py-4 text-slate-600">{issue.condominium?.name || 'Sem condominio'}</td>
+              <td className="px-4 py-4 text-slate-600">{issue.condominium?.name || 'Sem condomínio'}</td>
               <td className="px-4 py-4 text-slate-600">{issue.deadline_at ? formatDateTime(issue.deadline_at) : 'Sem prazo'}</td>
-              <td className="px-4 py-4"><Badge tone={statusTone(issue.status)}>{issue.status}</Badge></td>
-              <td className="px-4 py-4"><Badge tone={priorityTone(issue.priority)}>{issue.priority}</Badge></td>
+              <td className="px-4 py-4"><Badge tone={statusTone(issue.status)}>{issueStatusLabel(issue.status)}</Badge></td>
+              <td className="px-4 py-4"><Badge tone={priorityTone(issue.priority)}>{issuePriorityLabel(issue.priority)}</Badge></td>
               <td className="px-4 py-4">
                 <div className="flex justify-end gap-2">
                   <Button href={`/app/issues/${issue.id}/edit`} variant="soft" size="sm">Editar</Button>
@@ -81,7 +81,7 @@ export default function Index({ issues }) {
         onClose={closeDialog}
         onConfirm={confirmCancel}
         title="Cancelar chamado"
-        description={`O chamado #${selectedIssue?.id || ''} sera marcado como cancelado.`}
+        description={`O chamado #${selectedIssue?.id || ''} será marcado como cancelado.`}
         confirmLabel="Cancelar chamado"
       />
     </AppLayout>
@@ -113,4 +113,27 @@ function priorityTone(priority) {
   if (priority === 'alta') return 'yellow';
   if (priority === 'media') return 'blue';
   return 'gray';
+}
+
+function issueStatusLabel(status) {
+  const labels = {
+    pendente: 'Pendente',
+    em_andamento: 'Em andamento',
+    aguardando_assembleia: 'Aguardando assembleia',
+    finalizado: 'Finalizado',
+    cancelado: 'Cancelado',
+  };
+
+  return labels[status] || status;
+}
+
+function issuePriorityLabel(priority) {
+  const labels = {
+    baixa: 'Baixa',
+    media: 'Média',
+    alta: 'Alta',
+    urgente: 'Urgente',
+  };
+
+  return labels[priority] || priority;
 }

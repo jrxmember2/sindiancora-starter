@@ -36,12 +36,12 @@ class CondominiumController extends Controller
         abort_unless(
             app(LicenseGuard::class)->canCreateCondominium(app('currentCompany')),
             403,
-            'Limite de condominios da licenca atingido.'
+            'Limite de condomínios da licença atingido.'
         );
 
         Condominium::create($request->validated());
 
-        return redirect()->route('condominiums.index')->with('success', 'Condominio criado com sucesso.');
+        return redirect()->route('condominiums.index')->with('success', 'Condomínio criado com sucesso.');
     }
 
     public function edit(Condominium $condominium): Response
@@ -63,7 +63,7 @@ class CondominiumController extends Controller
 
         $condominium->update($request->validated());
 
-        return redirect()->route('condominiums.index')->with('success', 'Condominio atualizado.');
+        return redirect()->route('condominiums.index')->with('success', 'Condomínio atualizado.');
     }
 
     public function destroy(Condominium $condominium): RedirectResponse
@@ -75,6 +75,6 @@ class CondominiumController extends Controller
 
         $condominium->update(['status' => 'inactive']);
 
-        return back()->with('success', 'Condominio inativado.');
+        return back()->with('success', 'Condomínio inativado.');
     }
 }

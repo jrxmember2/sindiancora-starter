@@ -6,7 +6,7 @@ export default function ConfirmDialog({
   open,
   onClose,
   onConfirm,
-  title = 'Confirmar acao',
+  title = 'Confirmar ação',
   description = 'Tem certeza que deseja continuar?',
   confirmLabel = 'Confirmar',
   cancelLabel = 'Cancelar',
@@ -30,7 +30,7 @@ export default function ConfirmDialog({
       ]}
     >
       <p className="text-sm leading-6 text-slate-600">
-        Essa acao atualiza o status do registro e deve ser usada apenas quando voce realmente quiser remover o item da operacao ativa.
+        Essa ação atualiza o status do registro e deve ser usada apenas quando você realmente quiser remover o item da operação ativa.
       </p>
     </Modal>
   );

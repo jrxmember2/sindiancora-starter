@@ -118,7 +118,7 @@ class ContractLicensingTest extends TestCase
                 ->where('usage.condominiums.limit', 1)
                 ->where('usage.internal_users.used', 1)
                 ->has('alerts', 2)
-                ->where('alerts.0.title', 'Licenca perto do vencimento'));
+                ->where('alerts.0.title', 'Licença perto do vencimento'));
     }
 
     public function test_disabled_module_route_redirects_to_dashboard(): void

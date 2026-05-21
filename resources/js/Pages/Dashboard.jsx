@@ -20,7 +20,7 @@ export default function Dashboard({ stats }) {
           label="Empresas"
           value={isSuperadmin ? stats.companies ?? 0 : tenant?.companies?.length ?? 0}
           icon={Building2}
-          hint={isSuperadmin ? 'Visivel para Superadmin' : 'Empresas vinculadas ao seu usuario'}
+          hint={isSuperadmin ? 'Visível para Superadmin' : 'Empresas vinculadas ao seu usuário'}
         />
         <StatCard
           label="Chamados abertos"
@@ -38,7 +38,7 @@ export default function Dashboard({ stats }) {
           label="Documentos vencendo"
           value={stats.documents_due ?? 0}
           icon={Clock3}
-          hint="Janela dos proximos 30 dias"
+          hint="Janela dos próximos 30 dias"
         />
       </section>
 
@@ -57,8 +57,8 @@ export default function Dashboard({ stats }) {
             />
             <QuickAction
               href="/app/condominiums"
-              title="Atualizar condominios"
-              description="Mantenha a base ativa e alinhada aos limites da licenca."
+              title="Atualizar condomínios"
+              description="Mantenha a base ativa e alinhada aos limites da licença."
             />
             <QuickAction
               href="/app/documents"
@@ -68,8 +68,8 @@ export default function Dashboard({ stats }) {
             {isSuperadmin && (
               <QuickAction
                 href="/superadmin/licenses"
-                title="Revisar licencas"
-                description="Ajuste contratos, modulos liberados e limites por cliente."
+                title="Revisar licenças"
+                description="Ajuste contratos, módulos liberados e limites por cliente."
               />
             )}
           </div>
@@ -77,13 +77,13 @@ export default function Dashboard({ stats }) {
 
         <Card>
           <CardHeader
-            title="Uso da licenca"
-            description="Leitura rapida do contrato ativo da empresa selecionada."
+            title="Uso da licença"
+            description="Leitura rápida do contrato ativo da empresa selecionada."
           />
 
           <div className="space-y-5">
-            <Meter label="Condominios ativos" used={usage?.condominiums?.used || 0} limit={usage?.condominiums?.limit || 0} />
-            <Meter label="Usuarios internos" used={usage?.internal_users?.used || 0} limit={usage?.internal_users?.limit || 0} />
+            <Meter label="Condomínios ativos" used={usage?.condominiums?.used || 0} limit={usage?.condominiums?.limit || 0} />
+            <Meter label="Usuários internos" used={usage?.internal_users?.used || 0} limit={usage?.internal_users?.limit || 0} />
           </div>
 
           <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
@@ -95,7 +95,7 @@ export default function Dashboard({ stats }) {
                 </p>
                 <p className="mt-1 text-sm leading-6 text-slate-500">
                   {tenant?.currentCompany
-                    ? 'Os dados exibidos no painel respeitam a empresa ativa da sessao.'
+                    ? 'Os dados exibidos no painel respeitam a empresa ativa da sessão.'
                     : 'Selecione uma empresa para ver os dados operacionais e de licenciamento.'}
                 </p>
               </div>

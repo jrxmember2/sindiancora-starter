@@ -24,44 +24,44 @@ export default function Index({ items }) {
   };
 
   return (
-    <AppLayout title="Condominios">
-      <Head title="Condominios" />
+    <AppLayout title="Condomínios">
+      <Head title="Condomínios" />
 
       <Card>
         <CardHeader
-          title="Condominios"
+          title="Condomínios"
           description="Gerencie a carteira ativa e inativa da empresa selecionada."
           action={
             <Button href="/app/condominiums/create">
-              <Plus className="h-4 w-4" /> Novo condominio
+              <Plus className="h-4 w-4" /> Novo condomínio
             </Button>
           }
         />
 
         <DataTable
           columns={[
-            { key: 'name', label: 'Condominio' },
+            { key: 'name', label: 'Condomínio' },
             { key: 'contact', label: 'Contato' },
             { key: 'city', label: 'Cidade' },
             { key: 'status', label: 'Status' },
-            { key: 'actions', label: 'Acoes', align: 'right', className: 'w-40' },
+            { key: 'actions', label: 'Ações', align: 'right', className: 'w-40' },
           ]}
           rows={items.data}
           meta={items}
-          emptyTitle="Nenhum condominio cadastrado"
-          emptyDescription="Cadastre o primeiro condominio da empresa para iniciar a operacao."
+          emptyTitle="Nenhum condomínio cadastrado"
+          emptyDescription="Cadastre o primeiro condomínio da empresa para iniciar a operação."
           renderRow={(item) => (
             <tr key={item.id} className="bg-white">
               <td className="px-4 py-4">
                 <p className="font-bold text-slate-900">{item.name}</p>
-                <p className="text-xs text-slate-500">{item.document || 'Documento nao informado'}</p>
+                <p className="text-xs text-slate-500">{item.document || 'Documento não informado'}</p>
               </td>
               <td className="px-4 py-4 text-slate-600">
                 <p>{item.email || 'Sem e-mail'}</p>
                 <p className="text-xs text-slate-400">{item.phone || 'Sem telefone'}</p>
               </td>
               <td className="px-4 py-4 text-slate-600">
-                {item.city ? `${item.city}${item.state ? `/${item.state}` : ''}` : 'Nao informado'}
+                {item.city ? `${item.city}${item.state ? `/${item.state}` : ''}` : 'Não informado'}
               </td>
               <td className="px-4 py-4">
                 <Badge tone={item.status === 'active' ? 'green' : 'gray'}>{item.status}</Badge>
@@ -85,9 +85,9 @@ export default function Index({ items }) {
         open={Boolean(selectedItem)}
         onClose={closeDialog}
         onConfirm={confirmInactivate}
-        title="Inativar condominio"
-        description={`O condominio ${selectedItem?.name || ''} deixara de contar como ativo na licenca.`}
-        confirmLabel="Inativar condominio"
+        title="Inativar condomínio"
+        description={`O condomínio ${selectedItem?.name || ''} deixará de contar como ativo na licença.`}
+        confirmLabel="Inativar condomínio"
       />
     </AppLayout>
   );

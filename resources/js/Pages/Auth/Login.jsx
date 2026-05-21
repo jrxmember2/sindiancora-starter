@@ -24,9 +24,9 @@ export default function Login() {
       <div className="mb-8 flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-bold text-blue-600">Bem-vindo</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950">Acesse sua operacao</h1>
+          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950">Acesse sua operação</h1>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Entre para gerenciar empresas, licencas, condominios e chamados.
+            Entre para gerenciar empresas, licenças, condomínios e chamados.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export default function Login() {
       <form onSubmit={submit} className="space-y-4">
         <Field
           label="E-mail"
-          hint="Use o endereco associado ao seu usuario interno ou superadmin."
+          hint="Use o endereço associado ao seu usuário interno ou superadmin."
           error={errors.email}
         >
           <Input
@@ -65,7 +65,7 @@ export default function Login() {
           checked={data.remember}
           onChange={(event) => setData('remember', event.target.checked)}
           label="Manter conectado"
-          hint="Recomendado apenas em equipamentos confiaveis."
+          hint="Recomendado apenas em equipamentos confiáveis."
         />
 
         <Button type="submit" size="lg" disabled={processing} className="w-full">

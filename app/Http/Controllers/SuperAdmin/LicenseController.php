@@ -58,10 +58,10 @@ class LicenseController extends Controller
             'created',
             [],
             $this->licenseSnapshot($license),
-            'Licenca criada pelo superadmin.'
+            'Licença criada pelo superadmin.'
         );
 
-        return redirect()->route('superadmin.licenses.index')->with('success', 'Licenca criada.');
+        return redirect()->route('superadmin.licenses.index')->with('success', 'Licença criada.');
     }
 
     public function edit(License $license): Response
@@ -109,11 +109,11 @@ class LicenseController extends Controller
                 'updated',
                 $oldSnapshot,
                 $newSnapshot,
-                'Licenca atualizada pelo superadmin.'
+                'Licença atualizada pelo superadmin.'
             );
         }
 
-        return redirect()->route('superadmin.licenses.index')->with('success', 'Licenca atualizada.');
+        return redirect()->route('superadmin.licenses.index')->with('success', 'Licença atualizada.');
     }
 
     public function destroy(License $license): RedirectResponse
@@ -131,10 +131,10 @@ class LicenseController extends Controller
             'canceled',
             $oldSnapshot,
             $this->licenseSnapshot($license),
-            'Licenca cancelada pelo superadmin.'
+            'Licença cancelada pelo superadmin.'
         );
 
-        return back()->with('success', 'Licenca cancelada.');
+        return back()->with('success', 'Licença cancelada.');
     }
 
     private function syncModules(License $license, array $moduleIds): void

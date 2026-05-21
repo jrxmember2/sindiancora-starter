@@ -44,7 +44,7 @@ export default function Form({ item }) {
 
       <form onSubmit={submit} className="space-y-6">
         <Card>
-          <CardHeader title="Dados principais" description="Cadastro base do fornecedor para uso nos modulos operacionais." />
+          <CardHeader title="Dados principais" description="Cadastro base do fornecedor para uso nos módulos operacionais." />
 
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Nome" error={errors.name}>
@@ -56,7 +56,7 @@ export default function Form({ item }) {
             <Field label="E-mail" optional error={errors.email}>
               <Input type="email" value={data.email} onChange={(event) => setData('email', event.target.value)} />
             </Field>
-            <Field label="Responsavel" optional error={errors.responsible_name}>
+            <Field label="Responsável" optional error={errors.responsible_name}>
               <Input value={data.responsible_name} onChange={(event) => setData('responsible_name', event.target.value)} />
             </Field>
             <Field label="Celular" optional error={errors.mobile}>
@@ -68,14 +68,14 @@ export default function Form({ item }) {
             <Field label="Site" optional error={errors.website}>
               <Input value={data.website} onChange={(event) => setData('website', event.target.value)} placeholder="https://..." />
             </Field>
-            <Field label="Avaliacao" optional error={errors.rating}>
+            <Field label="Avaliação" optional error={errors.rating}>
               <Input type="number" min="0" max="5" value={data.rating} onChange={(event) => setData('rating', event.target.value)} />
             </Field>
           </div>
         </Card>
 
         <Card>
-          <CardHeader title="Endereco e observacoes" description="Informacoes de localizacao e notas operacionais." />
+          <CardHeader title="Endereço e observações" description="Informações de localização e notas operacionais." />
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Field label="CEP" optional error={errors.cep}>
@@ -84,7 +84,7 @@ export default function Form({ item }) {
             <Field label="Rua" optional className="xl:col-span-2" error={errors.street}>
               <Input value={data.street} onChange={(event) => setData('street', event.target.value)} />
             </Field>
-            <Field label="Numero" optional error={errors.number}>
+            <Field label="Número" optional error={errors.number}>
               <Input value={data.number} onChange={(event) => setData('number', event.target.value)} />
             </Field>
             <Field label="Complemento" optional error={errors.complement}>
@@ -99,20 +99,20 @@ export default function Form({ item }) {
             <Field label="UF" optional error={errors.state}>
               <Input value={data.state} onChange={(event) => setData('state', event.target.value)} maxLength={2} />
             </Field>
-            <Field label="Pais" optional error={errors.country}>
+            <Field label="País" optional error={errors.country}>
               <Input value={data.country} onChange={(event) => setData('country', event.target.value)} />
             </Field>
           </div>
 
           <div className="mt-4 space-y-4">
-            <Field label="Observacoes" optional error={errors.notes}>
+            <Field label="Observações" optional error={errors.notes}>
               <Textarea value={data.notes} onChange={(event) => setData('notes', event.target.value)} />
             </Field>
             <Checkbox
               checked={data.active}
               onChange={(event) => setData('active', event.target.checked)}
               label="Fornecedor ativo"
-              hint="Quando inativo, deixa de aparecer como opcao operacional."
+              hint="Quando inativo, deixa de aparecer como opção operacional."
             />
           </div>
         </Card>

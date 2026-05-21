@@ -169,18 +169,18 @@ class LicenseGuard
         if ($license && $license->ends_at && $license->ends_at->isFuture() && now()->diffInDays($license->ends_at, false) <= 30) {
             $alerts[] = [
                 'tone' => 'yellow',
-                'title' => 'Licenca perto do vencimento',
-                'message' => "A licenca atual vence em {$license->ends_at->format('d/m/Y')}.",
+                'title' => 'Licença perto do vencimento',
+                'message' => "A licença atual vence em {$license->ends_at->format('d/m/Y')}.",
             ];
         }
 
         if ($license && in_array($license->financial_status, ['due', 'overdue'], true)) {
             $alerts[] = [
                 'tone' => $license->financial_status === 'overdue' ? 'red' : 'yellow',
-                'title' => 'Atencao ao financeiro',
+                'title' => 'Atenção ao financeiro',
                 'message' => $license->financial_status === 'overdue'
-                    ? 'A licenca esta com status financeiro em atraso.'
-                    : 'A licenca esta com cobranca proxima ou pendente.',
+                    ? 'A licença está com status financeiro em atraso.'
+                    : 'A licença está com cobrança próxima ou pendente.',
             ];
         }
 
@@ -201,11 +201,11 @@ class LicenseGuard
         }
 
         foreach ([
-            'condominiums' => 'Condominios',
-            'internal_users' => 'Usuarios internos',
+            'condominiums' => 'Condomínios',
+            'internal_users' => 'Usuários internos',
             'storage' => 'Storage',
-            'whatsapp' => 'Instancias WhatsApp',
-            'ai' => 'Creditos de IA',
+            'whatsapp' => 'Instâncias WhatsApp',
+            'ai' => 'Créditos de IA',
         ] as $key => $label) {
             $metric = $usage[$key];
 
@@ -222,8 +222,8 @@ class LicenseGuard
             } elseif ($metric['percent'] >= 80) {
                 $alerts[] = [
                     'tone' => 'yellow',
-                    'title' => "Limite proximo: {$label}",
-                    'message' => "O recurso {$label} esta em {$metric['percent']}% do limite contratado.",
+                    'title' => "Limite próximo: {$label}",
+                    'message' => "O recurso {$label} está em {$metric['percent']}% do limite contratado.",
                 ];
             }
         }
@@ -238,8 +238,8 @@ class LicenseGuard
         if (! $company || ! $license) {
             return [
                 'code' => 'missing',
-                'label' => 'Sem licenca',
-                'message' => 'Nao existe licenca configurada para esta empresa.',
+                'label' => 'Sem licença',
+                'message' => 'Não existe licença configurada para esta empresa.',
                 'allows_access' => false,
                 'allows_write' => false,
                 'is_read_only' => false,
@@ -249,8 +249,8 @@ class LicenseGuard
         if ($license->auto_suspend_when_overdue && $license->financial_status === 'overdue') {
             return [
                 'code' => 'overdue_suspended',
-                'label' => 'Suspensa por inadimplencia',
-                'message' => 'A licenca foi suspensa automaticamente por inadimplencia.',
+                'label' => 'Suspensa por inadimplência',
+                'message' => 'A licença foi suspensa automaticamente por inadimplência.',
                 'allows_access' => false,
                 'allows_write' => false,
                 'is_read_only' => false,
@@ -261,7 +261,7 @@ class LicenseGuard
             return [
                 'code' => $license->status,
                 'label' => $this->statusLabel($license->status),
-                'message' => 'A licenca atual nao permite operacao neste momento.',
+                'message' => 'A licença atual não permite operação neste momento.',
                 'allows_access' => false,
                 'allows_write' => false,
                 'is_read_only' => false,
@@ -272,7 +272,7 @@ class LicenseGuard
             return [
                 'code' => 'read_only',
                 'label' => 'Somente leitura',
-                'message' => 'A licenca esta em modo somente leitura.',
+                'message' => 'A licença está em modo somente leitura.',
                 'allows_access' => true,
                 'allows_write' => false,
                 'is_read_only' => true,
@@ -284,7 +284,7 @@ class LicenseGuard
                 return [
                     'code' => 'expired_read_only',
                     'label' => 'Expirada - somente leitura',
-                    'message' => 'A licenca venceu e a empresa esta operando em modo somente leitura.',
+                    'message' => 'A licença venceu e a empresa está operando em modo somente leitura.',
                     'allows_access' => true,
                     'allows_write' => false,
                     'is_read_only' => true,
@@ -294,7 +294,7 @@ class LicenseGuard
             return [
                 'code' => 'expired',
                 'label' => 'Expirada',
-                'message' => 'A licenca venceu e o acesso operacional foi bloqueado.',
+                'message' => 'A licença venceu e o acesso operacional foi bloqueado.',
                 'allows_access' => false,
                 'allows_write' => false,
                 'is_read_only' => false,
@@ -304,7 +304,7 @@ class LicenseGuard
         return [
             'code' => $license->status,
             'label' => $this->statusLabel($license->status),
-            'message' => 'Licenca ativa para operacao.',
+            'message' => 'Licença ativa para operação.',
             'allows_access' => in_array($license->status, ['active', 'trial'], true),
             'allows_write' => in_array($license->status, ['active', 'trial'], true),
             'is_read_only' => false,

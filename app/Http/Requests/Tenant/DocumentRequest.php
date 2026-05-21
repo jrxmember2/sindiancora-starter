@@ -50,7 +50,7 @@ class DocumentRequest extends TenantFormRequest
             }
 
             if (! app(TenantResolver::class)->canAccessCondominium($user, $company, $condominiumId)) {
-                $validator->errors()->add('condominium_id', 'Voce nao pode vincular documentos a este condominio.');
+                $validator->errors()->add('condominium_id', 'Você não pode vincular documentos a este condomínio.');
             }
         });
     }

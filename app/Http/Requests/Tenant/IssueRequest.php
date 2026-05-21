@@ -39,7 +39,7 @@ class IssueRequest extends TenantFormRequest
             }
 
             if (! app(TenantResolver::class)->canAccessCondominium($user, $company, $this->input('condominium_id'))) {
-                $validator->errors()->add('condominium_id', 'Voce nao pode operar neste condominio.');
+                $validator->errors()->add('condominium_id', 'Você não pode operar neste condomínio.');
             }
         });
     }

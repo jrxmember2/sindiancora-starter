@@ -6,13 +6,13 @@ import { Card, CardHeader } from '@/Components/Card';
 
 export default function Index({ modules }) {
   return (
-    <AppLayout title="Modulos">
-      <Head title="Modulos" />
+    <AppLayout title="Módulos">
+      <Head title="Módulos" />
 
       <Card>
         <CardHeader
-          title="Catalogo de modulos"
-          description="Estes modulos podem ser liberados individualmente nas licencas contratuais."
+          title="Catálogo de módulos"
+          description="Estes módulos podem ser liberados individualmente nas licenças contratuais."
         />
 
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">

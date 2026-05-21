@@ -33,15 +33,15 @@ export default function Form({ issue, condominiums }) {
 
       <form onSubmit={submit} className="space-y-6">
         <Card>
-          <CardHeader
-            title="Dados do chamado"
-            description="Registre ocorrencias, demandas e tarefas operacionais."
-          />
+        <CardHeader
+          title="Dados do chamado"
+          description="Registre ocorrências, demandas e tarefas operacionais."
+        />
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field label="Condominio" error={errors.condominium_id}>
+        <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Condomínio" error={errors.condominium_id}>
               <Select value={data.condominium_id} onChange={(event) => setData('condominium_id', event.target.value)}>
-                <option value="">Selecione um condominio</option>
+                <option value="">Selecione um condomínio</option>
                 {condominiums.map((condominium) => (
                   <option key={condominium.id} value={condominium.id}>{condominium.name}</option>
                 ))}
@@ -58,26 +58,26 @@ export default function Form({ issue, condominiums }) {
 
             <Field label="Status" error={errors.status}>
               <Select value={data.status} onChange={(event) => setData('status', event.target.value)}>
-                <option value="pendente">pendente</option>
-                <option value="em_andamento">em_andamento</option>
-                <option value="aguardando_assembleia">aguardando_assembleia</option>
-                <option value="finalizado">finalizado</option>
-                <option value="cancelado">cancelado</option>
+                <option value="pendente">Pendente</option>
+                <option value="em_andamento">Em andamento</option>
+                <option value="aguardando_assembleia">Aguardando assembleia</option>
+                <option value="finalizado">Finalizado</option>
+                <option value="cancelado">Cancelado</option>
               </Select>
             </Field>
 
             <Field label="Prioridade" error={errors.priority}>
               <Select value={data.priority} onChange={(event) => setData('priority', event.target.value)}>
-                <option value="baixa">baixa</option>
-                <option value="media">media</option>
-                <option value="alta">alta</option>
-                <option value="urgente">urgente</option>
+                <option value="baixa">Baixa</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+                <option value="urgente">Urgente</option>
               </Select>
             </Field>
           </div>
 
           <div className="mt-4">
-            <Field label="Descricao" error={errors.description}>
+            <Field label="Descrição" error={errors.description}>
               <Textarea value={data.description} onChange={(event) => setData('description', event.target.value)} />
             </Field>
           </div>
@@ -86,14 +86,14 @@ export default function Form({ issue, condominiums }) {
         <Card>
           <CardHeader
             title="Visibilidade"
-            description="Preparacao para o portal/app do condomino nas fases futuras."
+            description="Preparação para o portal/app do condômino nas fases futuras."
           />
 
           <Checkbox
             checked={data.shared_with_residents}
             onChange={(event) => setData('shared_with_residents', event.target.checked)}
-            label="Compartilhar futuramente com condominos"
-            hint="O chamado continua interno nesta fase, mas ja fica marcado para uso futuro."
+            label="Compartilhar futuramente com condôminos"
+            hint="O chamado continua interno nesta fase, mas já fica marcado para uso futuro."
           />
         </Card>
 

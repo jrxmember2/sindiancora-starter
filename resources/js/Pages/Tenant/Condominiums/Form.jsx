@@ -37,18 +37,18 @@ export default function Form({ item }) {
   };
 
   return (
-    <AppLayout title={editing ? 'Editar condominio' : 'Novo condominio'}>
-      <Head title={editing ? 'Editar condominio' : 'Novo condominio'} />
+    <AppLayout title={editing ? 'Editar condomínio' : 'Novo condomínio'}>
+      <Head title={editing ? 'Editar condomínio' : 'Novo condomínio'} />
 
       <form onSubmit={submit} className="space-y-6">
         <Card>
           <CardHeader
             title="Dados cadastrais"
-            description="Base principal do condominio dentro da empresa ativa."
+            description="Base principal do condomínio dentro da empresa ativa."
           />
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Field label="Nome do condominio" error={errors.name}>
+            <Field label="Nome do condomínio" error={errors.name}>
               <Input value={data.name} onChange={(event) => setData('name', event.target.value)} />
             </Field>
             <Field label="Slug" optional error={errors.slug}>
@@ -73,7 +73,7 @@ export default function Form({ item }) {
         </Card>
 
         <Card>
-          <CardHeader title="Endereco e gestao" description="Dados operacionais para contato e mandato." />
+          <CardHeader title="Endereço e gestão" description="Dados operacionais para contato e mandato." />
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Field label="CEP" optional error={errors.cep}>
@@ -82,7 +82,7 @@ export default function Form({ item }) {
             <Field label="Rua" optional className="xl:col-span-2" error={errors.street}>
               <Input value={data.street} onChange={(event) => setData('street', event.target.value)} />
             </Field>
-            <Field label="Numero" optional error={errors.number}>
+            <Field label="Número" optional error={errors.number}>
               <Input value={data.number} onChange={(event) => setData('number', event.target.value)} />
             </Field>
             <Field label="Complemento" optional error={errors.complement}>
@@ -100,7 +100,7 @@ export default function Form({ item }) {
             <Field label="Administrador" optional className="xl:col-span-2" error={errors.administrator_name}>
               <Input value={data.administrator_name} onChange={(event) => setData('administrator_name', event.target.value)} />
             </Field>
-            <Field label="Inicio do mandato" optional error={errors.mandate_start}>
+            <Field label="Início do mandato" optional error={errors.mandate_start}>
               <Input type="date" value={data.mandate_start} onChange={(event) => setData('mandate_start', event.target.value)} />
             </Field>
             <Field label="Fim do mandato" optional error={errors.mandate_end}>
@@ -111,7 +111,7 @@ export default function Form({ item }) {
 
         <div className="flex flex-wrap justify-end gap-3">
           <Button href="/app/condominiums" variant="soft">Voltar</Button>
-          <Button type="submit" disabled={processing}>{editing ? 'Salvar condominio' : 'Criar condominio'}</Button>
+          <Button type="submit" disabled={processing}>{editing ? 'Salvar condomínio' : 'Criar condomínio'}</Button>
         </div>
       </form>
     </AppLayout>

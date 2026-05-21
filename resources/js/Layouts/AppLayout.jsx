@@ -21,9 +21,9 @@ import { cn } from '@/lib/utils';
 
 const nav = [
   { label: 'Dashboard', href: '/dashboard', icon: Gauge },
-  { label: 'Minha licenca', href: '/app/license', icon: ShieldCheck },
+  { label: 'Minha licença', href: '/app/license', icon: ShieldCheck },
   { label: 'Chamados', href: '/app/issues', icon: TicketCheck, moduleKey: 'chamados' },
-  { label: 'Condominios', href: '/app/condominiums', icon: Building2, moduleKey: 'configuracoes' },
+  { label: 'Condomínios', href: '/app/condominiums', icon: Building2, moduleKey: 'configuracoes' },
   { label: 'Fornecedores', href: '/app/suppliers', icon: Wrench, moduleKey: 'fornecedores' },
   { label: 'Documentos', href: '/app/documents', icon: FileText, moduleKey: 'documentos' },
   { label: 'Cronograma', href: '/app/cronograma', icon: CalendarDays, moduleKey: 'cronograma', comingSoon: true },
@@ -31,9 +31,9 @@ const nav = [
 
 const superNav = [
   { label: 'Empresas', href: '/superadmin/companies', icon: Home },
-  { label: 'Licencas', href: '/superadmin/licenses', icon: ShieldCheck },
-  { label: 'Modulos', href: '/superadmin/modules', icon: Settings },
-  { label: 'Versoes', href: '/superadmin/versions', icon: History },
+  { label: 'Licenças', href: '/superadmin/licenses', icon: ShieldCheck },
+  { label: 'Módulos', href: '/superadmin/modules', icon: Settings },
+  { label: 'Versões', href: '/superadmin/versions', icon: History },
 ];
 
 export default function AppLayout({ title, children }) {
@@ -71,7 +71,7 @@ export default function AppLayout({ title, children }) {
 
     const next = [
       success && { id: `success-${Date.now()}`, tone: 'success', title: 'Tudo certo', message: success },
-      error && { id: `error-${Date.now() + 1}`, tone: 'error', title: 'Algo precisa de atencao', message: error },
+      error && { id: `error-${Date.now() + 1}`, tone: 'error', title: 'Algo precisa de atenção', message: error },
     ].filter(Boolean);
 
     setToasts((current) => [...current, ...next]);
@@ -112,7 +112,7 @@ export default function AppLayout({ title, children }) {
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         title="Menu principal"
-        description="Navegue entre os modulos liberados do painel."
+        description="Navegue entre os módulos liberados do painel."
       >
         <SidebarHeader compact />
         <div className="mt-5">
@@ -187,7 +187,7 @@ export default function AppLayout({ title, children }) {
 
                 <div className="leading-tight">
                   <p className="text-sm font-bold text-slate-900">{auth?.user?.name}</p>
-                  <p className="text-xs text-slate-500">{isSuperadmin ? 'Superadmin' : 'Usuario interno'}</p>
+                  <p className="text-xs text-slate-500">{isSuperadmin ? 'Superadmin' : 'Usuário interno'}</p>
                 </div>
               </div>
 

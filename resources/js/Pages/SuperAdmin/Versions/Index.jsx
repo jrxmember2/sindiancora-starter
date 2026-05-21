@@ -7,21 +7,21 @@ import { Card, CardHeader } from '@/Components/Card';
 
 export default function Index({ currentVersion, history }) {
   return (
-    <AppLayout title="Versoes">
-      <Head title="Versoes" />
+    <AppLayout title="Versões">
+      <Head title="Versões" />
 
       <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
         <Card>
           <CardHeader
             title="Versionamento da plataforma"
-            description="Painel interno para acompanhamento das releases publicadas. Visivel apenas para o superadmin."
+            description="Painel interno para acompanhamento das releases publicadas. Visível apenas para o superadmin."
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Metric
               icon={Boxes}
-              label="Versao atual"
-              value={currentVersion?.number || 'nao definida'}
+              label="Versão atual"
+              value={currentVersion?.number || 'não definida'}
               hint={currentVersion?.name || 'Sem nome de release'}
             />
             <Metric
@@ -34,27 +34,27 @@ export default function Index({ currentVersion, history }) {
               icon={CalendarDays}
               label="Liberada em"
               value={formatDate(currentVersion?.released_at)}
-              hint="Data de publicacao"
+              hint="Data de publicação"
             />
             <Metric
               icon={Fingerprint}
               label="Build SHA"
               value={shortSha(currentVersion?.build_sha)}
-              hint={currentVersion?.build_sha || 'Nao informado'}
+              hint={currentVersion?.build_sha || 'Não informado'}
             />
           </div>
         </Card>
 
         <Card>
           <CardHeader
-            title="Politica inicial"
-            description="Base de governanca para manter a plataforma rastreavel desde o inicio."
+            title="Política inicial"
+            description="Base de governança para manter a plataforma rastreável desde o início."
           />
 
           <div className="space-y-3 text-sm leading-6 text-slate-600">
-            <p>As versoes ficam registradas em codigo e expostas apenas na area do superadmin.</p>
-            <p>Cada release deve informar numero, stage, data e principais entregas publicadas.</p>
-            <p>Nas proximas fases, podemos evoluir isso para changelog persistido em banco e notas por deploy.</p>
+            <p>As versões ficam registradas em código e expostas apenas na área do superadmin.</p>
+            <p>Cada release deve informar número, stage, data e principais entregas publicadas.</p>
+            <p>Nas próximas fases, podemos evoluir isso para changelog persistido em banco e notas por deploy.</p>
           </div>
         </Card>
       </div>
@@ -62,7 +62,7 @@ export default function Index({ currentVersion, history }) {
       <div className="mt-8">
         <Card>
           <CardHeader
-            title="Historico de releases"
+            title="Histórico de releases"
             description="Linha do tempo das entregas publicadas no sistema."
           />
 
@@ -122,7 +122,7 @@ function Metric({ icon: Icon, label, value, hint }) {
 
 function formatDate(value) {
   if (!value) {
-    return 'Nao informado';
+    return 'Não informado';
   }
 
   const date = new Date(`${value}T00:00:00`);
@@ -140,7 +140,7 @@ function formatDate(value) {
 
 function shortSha(value) {
   if (!value) {
-    return 'Nao informado';
+    return 'Não informado';
   }
 
   return value.slice(0, 8);
@@ -150,11 +150,11 @@ function labelStage(stage) {
   const labels = {
     foundation: 'Foundation',
     development: 'Development',
-    homologation: 'Homologacao',
-    production: 'Production',
+    homologation: 'Homologação',
+    production: 'Produção',
   };
 
-  return labels[stage] || stage || 'Nao informado';
+  return labels[stage] || stage || 'Não informado';
 }
 
 function toneStage(stage) {

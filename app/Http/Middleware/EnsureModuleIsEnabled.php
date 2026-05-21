@@ -14,7 +14,7 @@ class EnsureModuleIsEnabled
         $company = app('currentCompany');
 
         if (! $company || ! app(LicenseGuard::class)->canAccessModule($company, $moduleKey)) {
-            return redirect()->route('dashboard')->with('error', "O modulo {$moduleKey} nao esta habilitado nesta licenca.");
+            return redirect()->route('dashboard')->with('error', "O módulo {$moduleKey} não está habilitado nesta licença.");
         }
 
         return $next($request);

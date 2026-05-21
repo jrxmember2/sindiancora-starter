@@ -15,7 +15,7 @@ export default function AuthLayout({ children }) {
 
             <div>
               <p className="text-xl font-extrabold tracking-tight">SindiAncora</p>
-              <p className="text-sm text-blue-100/80">Gestao condominial inteligente</p>
+              <p className="text-sm text-blue-100/80">Gestão condominial inteligente</p>
             </div>
           </div>
 
@@ -27,13 +27,13 @@ export default function AuthLayout({ children }) {
               className="max-w-2xl"
             >
               <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-blue-50 backdrop-blur">
-                SaaS multiempresa | licenciamento flexivel | IA-ready
+                SaaS multiempresa | licenciamento flexível | IA-ready
               </p>
               <h1 className="text-5xl font-black tracking-tight text-white xl:text-6xl">
-                Uma operacao condominial mais clara, segura e controlavel.
+                Uma operação condominial mais clara, segura e controlável.
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-                Centralize chamados, documentos, fornecedores, prazos e licencas em uma plataforma
+                Centralize chamados, documentos, fornecedores, prazos e licenças em uma plataforma
                 preparada para crescer com cada empresa cliente.
               </p>
             </motion.div>
@@ -46,7 +46,7 @@ export default function AuthLayout({ children }) {
             >
               <img
                 src="/branding/login-hero.png"
-                alt="Ilustracao de atendimento SindiAncora"
+                alt="Ilustração de atendimento SindiAncora"
                 className="max-h-[34rem] w-auto object-contain drop-shadow-[0_20px_50px_rgba(15,23,42,0.35)]"
               />
             </motion.div>
@@ -68,7 +68,7 @@ export default function AuthLayout({ children }) {
 
               <div>
                 <p className="text-base font-extrabold tracking-tight text-slate-950">SindiAncora</p>
-                <p className="text-sm text-slate-500">Gestao condominial inteligente</p>
+                <p className="text-sm text-slate-500">Gestão condominial inteligente</p>
               </div>
             </div>
 

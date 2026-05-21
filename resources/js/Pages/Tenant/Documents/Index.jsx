@@ -30,7 +30,7 @@ export default function Index({ items }) {
       <Card>
         <CardHeader
           title="Documentos"
-          description="Organize contratos, convencoes, regimentos e demais arquivos do condominio."
+          description="Organize contratos, convenções, regimentos e demais arquivos do condomínio."
           action={
             <Button href="/app/documents/create">
               <Plus className="h-4 w-4" /> Novo documento
@@ -41,10 +41,10 @@ export default function Index({ items }) {
         <DataTable
           columns={[
             { key: 'title', label: 'Documento' },
-            { key: 'condominium', label: 'Condominio' },
-            { key: 'validity', label: 'Vigencia' },
+            { key: 'condominium', label: 'Condomínio' },
+            { key: 'validity', label: 'Vigência' },
             { key: 'status', label: 'Status' },
-            { key: 'actions', label: 'Acoes', align: 'right', className: 'w-40' },
+            { key: 'actions', label: 'Ações', align: 'right', className: 'w-40' },
           ]}
           rows={items.data}
           meta={items}
@@ -54,15 +54,15 @@ export default function Index({ items }) {
             <tr key={item.id} className="bg-white">
               <td className="px-4 py-4">
                 <p className="font-bold text-slate-900">{item.title}</p>
-                <p className="text-xs text-slate-500">{item.document_type || 'tipo nao informado'}</p>
+                <p className="text-xs text-slate-500">{documentTypeLabel(item.document_type)}</p>
               </td>
               <td className="px-4 py-4 text-slate-600">{item.condominium?.name || 'Geral da empresa'}</td>
               <td className="px-4 py-4 text-slate-600">
                 <p>{formatDate(item.valid_until)}</p>
-                <p className="text-xs text-slate-400">Renovacao: {formatDate(item.renewal_date)}</p>
+                <p className="text-xs text-slate-400">Renovação: {formatDate(item.renewal_date)}</p>
               </td>
               <td className="px-4 py-4">
-                <Badge tone={statusTone(item.status)}>{item.status}</Badge>
+                <Badge tone={statusTone(item.status)}>{documentStatusLabel(item.status)}</Badge>
               </td>
               <td className="px-4 py-4">
                 <div className="flex justify-end gap-2">
@@ -82,7 +82,7 @@ export default function Index({ items }) {
         onClose={closeDialog}
         onConfirm={confirmDelete}
         title="Remover documento"
-        description={`O documento ${selectedItem?.title || ''} sera excluido da base atual.`}
+        description={`O documento ${selectedItem?.title || ''} será excluído da base atual.`}
         confirmLabel="Remover documento"
       />
     </AppLayout>
@@ -98,4 +98,35 @@ function statusTone(status) {
   if (status === 'proximo_vencimento') return 'yellow';
   if (status === 'vencido') return 'red';
   return 'gray';
+}
+
+function documentStatusLabel(status) {
+  const labels = {
+    valido: 'Válido',
+    vencido: 'Vencido',
+    proximo_vencimento: 'Próximo do vencimento',
+    sem_vigencia: 'Sem vigência',
+  };
+
+  return labels[status] || status || 'Não informado';
+}
+
+function documentTypeLabel(type) {
+  const labels = {
+    ata: 'Ata',
+    contrato: 'Contrato',
+    cartao_cnpj: 'Cartão CNPJ',
+    conclusao_obra: 'Conclusão de obra',
+    convencao: 'Convenção',
+    regimento_interno: 'Regimento interno',
+    orcamento: 'Orçamento',
+    orcamento_anual: 'Orçamento anual',
+    planta: 'Planta',
+    prestacao_contas: 'Prestação de contas',
+    processo_judicial: 'Processo judicial',
+    reforma_particular: 'Reforma particular',
+    outros: 'Outros',
+  };
+
+  return labels[type] || 'Tipo não informado';
 }

@@ -42,9 +42,9 @@ export default function Index({ companies }) {
           columns={[
             { key: 'name', label: 'Empresa' },
             { key: 'contact', label: 'Contato' },
-            { key: 'owner', label: 'Responsavel' },
+            { key: 'owner', label: 'Responsável' },
             { key: 'status', label: 'Status' },
-            { key: 'actions', label: 'Acoes', align: 'right', className: 'w-40' },
+            { key: 'actions', label: 'Ações', align: 'right', className: 'w-40' },
           ]}
           rows={companies.data}
           meta={companies}
@@ -60,10 +60,10 @@ export default function Index({ companies }) {
                 <p>{company.email || 'Sem e-mail'}</p>
                 <p className="text-xs text-slate-400">{company.phone || 'Sem telefone'}</p>
               </td>
-              <td className="px-4 py-4 text-slate-600">{company.responsible_name || 'Nao informado'}</td>
+              <td className="px-4 py-4 text-slate-600">{company.responsible_name || 'Não informado'}</td>
               <td className="px-4 py-4">
                 <Badge tone={company.status === 'active' ? 'green' : company.status === 'suspended' ? 'yellow' : 'gray'}>
-                  {company.status}
+                  {companyStatusLabel(company.status)}
                 </Badge>
               </td>
               <td className="px-4 py-4">
@@ -88,9 +88,19 @@ export default function Index({ companies }) {
         onClose={closeDialog}
         onConfirm={confirmInactivate}
         title="Inativar empresa"
-        description={`A empresa ${selectedCompany?.name || ''} deixara de operar como tenant ativo.`}
+        description={`A empresa ${selectedCompany?.name || ''} deixará de operar como tenant ativo.`}
         confirmLabel="Inativar empresa"
       />
     </AppLayout>
   );
+}
+
+function companyStatusLabel(status) {
+  const labels = {
+    active: 'Ativa',
+    inactive: 'Inativa',
+    suspended: 'Suspensa',
+  };
+
+  return labels[status] || status;
 }

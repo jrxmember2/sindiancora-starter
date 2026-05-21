@@ -42,9 +42,9 @@ export default function Form({ company }) {
 
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Nome da empresa" error={errors.name}>
-              <Input value={data.name} onChange={(event) => setData('name', event.target.value)} placeholder="Serratech Gestao Condominial" />
+              <Input value={data.name} onChange={(event) => setData('name', event.target.value)} placeholder="Serratech Gestão Condominial" />
             </Field>
-            <Field label="Slug" hint="Usado como identificador amigavel do tenant." error={errors.slug}>
+            <Field label="Slug" hint="Usado como identificador amigável do tenant." error={errors.slug}>
               <Input value={data.slug} onChange={(event) => setData('slug', event.target.value)} placeholder="serratech-gestao" />
             </Field>
             <Field label="Documento" optional error={errors.document}>
@@ -56,8 +56,8 @@ export default function Form({ company }) {
             <Field label="Telefone" optional error={errors.phone}>
               <Input value={data.phone} onChange={(event) => setData('phone', event.target.value)} placeholder="(00) 00000-0000" />
             </Field>
-            <Field label="Responsavel" optional error={errors.responsible_name}>
-              <Input value={data.responsible_name} onChange={(event) => setData('responsible_name', event.target.value)} placeholder="Nome da pessoa responsavel" />
+            <Field label="Responsável" optional error={errors.responsible_name}>
+              <Input value={data.responsible_name} onChange={(event) => setData('responsible_name', event.target.value)} placeholder="Nome da pessoa responsável" />
             </Field>
           </div>
         </Card>
@@ -65,7 +65,7 @@ export default function Form({ company }) {
         <Card>
           <CardHeader
             title="Status e identidade visual"
-            description="As cores serao usadas nas proximas fases para personalizacao do tenant."
+            description="As cores serão usadas nas próximas fases para personalização do tenant."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -79,7 +79,7 @@ export default function Form({ company }) {
             <Field label="Cor principal" optional error={errors.primary_color}>
               <Input value={data.primary_color} onChange={(event) => setData('primary_color', event.target.value)} />
             </Field>
-            <Field label="Cor secundaria" optional error={errors.secondary_color}>
+            <Field label="Cor secundária" optional error={errors.secondary_color}>
               <Input value={data.secondary_color} onChange={(event) => setData('secondary_color', event.target.value)} />
             </Field>
           </div>
@@ -88,7 +88,7 @@ export default function Form({ company }) {
         <div className="flex flex-wrap justify-end gap-3">
           <Button href="/superadmin/companies" variant="soft">Voltar</Button>
           <Button type="submit" disabled={processing}>
-            {editing ? 'Salvar alteracoes' : 'Criar empresa'}
+            {editing ? 'Salvar alterações' : 'Criar empresa'}
           </Button>
         </div>
       </form>

@@ -6,9 +6,30 @@ import Badge from '@/Components/Badge';
 import { Card, CardHeader } from '@/Components/Card';
 import { Checkbox, CheckboxCard, Field, Input, Select, Textarea } from '@/Components/Form';
 
-const statusOptions = ['active', 'trial', 'pending', 'expired', 'suspended', 'blocked', 'read_only', 'canceled'];
-const financialStatusOptions = ['current', 'due', 'overdue', 'negotiated', 'suspended', 'canceled'];
-const billingTypeOptions = ['monthly', 'quarterly', 'yearly', 'custom'];
+const statusOptions = [
+  { value: 'active', label: 'Ativa' },
+  { value: 'trial', label: 'Teste' },
+  { value: 'pending', label: 'Pendente' },
+  { value: 'expired', label: 'Expirada' },
+  { value: 'suspended', label: 'Suspensa' },
+  { value: 'blocked', label: 'Bloqueada' },
+  { value: 'read_only', label: 'Somente leitura' },
+  { value: 'canceled', label: 'Cancelada' },
+];
+const financialStatusOptions = [
+  { value: 'current', label: 'Em dia' },
+  { value: 'due', label: 'A vencer' },
+  { value: 'overdue', label: 'Em atraso' },
+  { value: 'negotiated', label: 'Negociado' },
+  { value: 'suspended', label: 'Suspenso' },
+  { value: 'canceled', label: 'Cancelado' },
+];
+const billingTypeOptions = [
+  { value: 'monthly', label: 'Mensal' },
+  { value: 'quarterly', label: 'Trimestral' },
+  { value: 'yearly', label: 'Anual' },
+  { value: 'custom', label: 'Personalizada' },
+];
 
 export default function Form({
   license,
@@ -65,16 +86,16 @@ export default function Form({
   };
 
   return (
-    <AppLayout title={editing ? 'Editar licenca' : 'Nova licenca'}>
-      <Head title={editing ? 'Editar licenca' : 'Nova licenca'} />
+    <AppLayout title={editing ? 'Editar licença' : 'Nova licença'}>
+      <Head title={editing ? 'Editar licença' : 'Nova licença'} />
 
       <form onSubmit={submit} className="space-y-6">
         {editing && (
           <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
             <Card>
               <CardHeader
-                title="Saude contratual"
-                description="Leitura rapida do status operacional, consumo e alertas da empresa vinculada."
+                title="Saúde contratual"
+                description="Leitura rápida do status operacional, consumo e alertas da empresa vinculada."
               />
 
               <div className="grid gap-4 md:grid-cols-2">
@@ -85,15 +106,15 @@ export default function Form({
                 />
                 <MetricCard
                   label="Mensagem atual"
-                  value={statusSummary?.message || 'Sem mensagem disponivel.'}
+                  value={statusSummary?.message || 'Sem mensagem disponível.'}
                   compact
                 />
                 <MetricCard
-                  label="Condominios ativos"
+                  label="Condomínios ativos"
                   value={formatUsage(usage?.condominiums)}
                 />
                 <MetricCard
-                  label="Usuarios internos"
+                  label="Usuários internos"
                   value={formatUsage(usage?.internal_users)}
                 />
               </div>
@@ -106,7 +127,7 @@ export default function Form({
                   </div>
                 )) : (
                   <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">
-                    Nenhum alerta contratual para esta licenca neste momento.
+                    Nenhum alerta contratual para esta licença neste momento.
                   </div>
                 )}
               </div>
@@ -114,8 +135,8 @@ export default function Form({
 
             <Card>
               <CardHeader
-                title="Historico recente"
-                description="Ultimas mudancas registradas para auditoria comercial da licenca."
+                title="Histórico recente"
+                description="Últimas mudanças registradas para auditoria comercial da licença."
               />
 
               <div className="space-y-3">
@@ -129,12 +150,12 @@ export default function Form({
                       {entry.changed_by || 'Sistema'}
                     </p>
                     <p className="mt-1 text-sm leading-6 text-slate-600">
-                      {entry.notes || 'Alteracao registrada sem observacao adicional.'}
+                      {entry.notes || 'Alteração registrada sem observação adicional.'}
                     </p>
                   </div>
                 )) : (
                   <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">
-                    Nenhum historico registrado ainda para esta licenca.
+                    Nenhum histórico registrado ainda para esta licença.
                   </div>
                 )}
               </div>
@@ -145,7 +166,7 @@ export default function Form({
         <Card>
           <CardHeader
             title="Contrato e ciclo comercial"
-            description="Defina empresa, status, cobranca e datas de referencia da licenca."
+            description="Defina empresa, status, cobrança e datas de referência da licença."
           />
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -162,29 +183,29 @@ export default function Form({
               <Input value={data.contract_number} onChange={(event) => setData('contract_number', event.target.value)} placeholder="CON-2026-001" />
             </Field>
 
-            <Field label="Status da licenca" error={errors.status}>
+            <Field label="Status da licença" error={errors.status}>
               <Select value={data.status} onChange={(event) => setData('status', event.target.value)}>
-                {statusOptions.map((status) => <option key={status} value={status}>{status}</option>)}
+                {statusOptions.map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}
               </Select>
             </Field>
 
             <Field label="Status financeiro" error={errors.financial_status}>
               <Select value={data.financial_status} onChange={(event) => setData('financial_status', event.target.value)}>
-                {financialStatusOptions.map((status) => <option key={status} value={status}>{status}</option>)}
+                {financialStatusOptions.map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}
               </Select>
             </Field>
 
-            <Field label="Tipo de cobranca" error={errors.billing_type}>
+            <Field label="Tipo de cobrança" error={errors.billing_type}>
               <Select value={data.billing_type} onChange={(event) => setData('billing_type', event.target.value)}>
-                {billingTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+                {billingTypeOptions.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
               </Select>
             </Field>
 
-            <Field label="Dia de cobranca" optional error={errors.billing_day}>
+            <Field label="Dia de cobrança" optional error={errors.billing_day}>
               <Input type="number" min="1" max="31" value={data.billing_day} onChange={(event) => setData('billing_day', event.target.value)} />
             </Field>
 
-            <Field label="Inicio" optional error={errors.starts_at}>
+            <Field label="Início" optional error={errors.starts_at}>
               <Input type="date" value={data.starts_at} onChange={(event) => setData('starts_at', event.target.value)} />
             </Field>
 
@@ -192,7 +213,7 @@ export default function Form({
               <Input type="date" value={data.ends_at} onChange={(event) => setData('ends_at', event.target.value)} />
             </Field>
 
-            <Field label="Renovacao" optional error={errors.renews_at}>
+            <Field label="Renovação" optional error={errors.renews_at}>
               <Input type="date" value={data.renews_at} onChange={(event) => setData('renews_at', event.target.value)} />
             </Field>
           </div>
@@ -205,25 +226,25 @@ export default function Form({
           />
 
           <div className="grid gap-4 md:grid-cols-3">
-            <Field label="Condominios" error={errors.max_condominiums}>
+            <Field label="Condomínios" error={errors.max_condominiums}>
               <Input type="number" min="0" value={data.max_condominiums} onChange={(event) => setData('max_condominiums', event.target.value)} />
             </Field>
-            <Field label="Usuarios internos" error={errors.max_internal_users}>
+            <Field label="Usuários internos" error={errors.max_internal_users}>
               <Input type="number" min="0" value={data.max_internal_users} onChange={(event) => setData('max_internal_users', event.target.value)} />
             </Field>
             <Field label="Storage (MB)" error={errors.max_storage_mb}>
               <Input type="number" min="0" value={data.max_storage_mb} onChange={(event) => setData('max_storage_mb', event.target.value)} />
             </Field>
-            <Field label="Instancias WhatsApp" error={errors.max_whatsapp_instances}>
+            <Field label="Instâncias WhatsApp" error={errors.max_whatsapp_instances}>
               <Input type="number" min="0" value={data.max_whatsapp_instances} onChange={(event) => setData('max_whatsapp_instances', event.target.value)} />
             </Field>
-            <Field label="Creditos IA por mes" error={errors.monthly_ai_credits}>
+            <Field label="Créditos de IA por mês" error={errors.monthly_ai_credits}>
               <Input type="number" min="0" value={data.monthly_ai_credits} onChange={(event) => setData('monthly_ai_credits', event.target.value)} />
             </Field>
             <Field label="Valor mensal" optional error={errors.monthly_amount}>
               <Input type="number" step="0.01" min="0" value={data.monthly_amount} onChange={(event) => setData('monthly_amount', event.target.value)} />
             </Field>
-            <Field label="Valor de implantacao" optional error={errors.setup_amount}>
+            <Field label="Valor de implantação" optional error={errors.setup_amount}>
               <Input type="number" step="0.01" min="0" value={data.setup_amount} onChange={(event) => setData('setup_amount', event.target.value)} />
             </Field>
           </div>
@@ -231,7 +252,7 @@ export default function Form({
 
         <Card>
           <CardHeader
-            title="Modulos liberados"
+            title="Módulos liberados"
             description="Marque exatamente os recursos contratados para este cliente."
           />
 
@@ -252,7 +273,7 @@ export default function Form({
         <Card>
           <CardHeader
             title="Regras contratuais"
-            description="Controles de bloqueio e tolerancia quando a licenca encostar nos limites."
+            description="Controles de bloqueio e tolerância quando a licença encostar nos limites."
           />
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -260,7 +281,7 @@ export default function Form({
               checked={data.allow_overage}
               onChange={(event) => setData('allow_overage', event.target.checked)}
               label="Permitir excedente"
-              hint="Permite seguir operando acima do limite quando os demais bloqueios nao impedirem."
+              hint="Permite seguir operando acima do limite quando os demais bloqueios não impedirem."
             />
             <Checkbox
               checked={data.block_new_records_on_limit}
@@ -280,8 +301,8 @@ export default function Form({
           </div>
 
           <div className="mt-4">
-            <Field label="Observacoes comerciais" optional error={errors.notes}>
-              <Textarea value={data.notes} onChange={(event) => setData('notes', event.target.value)} placeholder="Observacoes internas do contrato e da negociacao." />
+            <Field label="Observações comerciais" optional error={errors.notes}>
+              <Textarea value={data.notes} onChange={(event) => setData('notes', event.target.value)} placeholder="Observações internas do contrato e da negociação." />
             </Field>
           </div>
         </Card>
@@ -289,7 +310,7 @@ export default function Form({
         <div className="flex flex-wrap justify-end gap-3">
           <Button href="/superadmin/licenses" variant="soft">Voltar</Button>
           <Button type="submit" disabled={processing}>
-            {editing ? 'Salvar licenca' : 'Criar licenca'}
+            {editing ? 'Salvar licença' : 'Criar licença'}
           </Button>
         </div>
       </form>

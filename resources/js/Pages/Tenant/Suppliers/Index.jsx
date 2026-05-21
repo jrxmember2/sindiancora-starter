@@ -30,7 +30,7 @@ export default function Index({ items }) {
       <Card>
         <CardHeader
           title="Fornecedores"
-          description="Cadastro central de parceiros e prestadores de servico."
+          description="Cadastro central de parceiros e prestadores de serviço."
           action={
             <Button href="/app/suppliers/create">
               <Plus className="h-4 w-4" /> Novo fornecedor
@@ -42,26 +42,26 @@ export default function Index({ items }) {
           columns={[
             { key: 'name', label: 'Fornecedor' },
             { key: 'contact', label: 'Contato' },
-            { key: 'region', label: 'Atuacao' },
+            { key: 'region', label: 'Atuação' },
             { key: 'status', label: 'Status' },
-            { key: 'actions', label: 'Acoes', align: 'right', className: 'w-40' },
+            { key: 'actions', label: 'Ações', align: 'right', className: 'w-40' },
           ]}
           rows={items.data}
           meta={items}
           emptyTitle="Nenhum fornecedor cadastrado"
-          emptyDescription="Cadastre fornecedores para usalos em chamados e operacoes futuras."
+          emptyDescription="Cadastre fornecedores para usá-los em chamados e operações futuras."
           renderRow={(item) => (
             <tr key={item.id} className="bg-white">
               <td className="px-4 py-4">
                 <p className="font-bold text-slate-900">{item.name}</p>
-                <p className="text-xs text-slate-500">{item.document || 'Documento nao informado'}</p>
+                <p className="text-xs text-slate-500">{item.document || 'Documento não informado'}</p>
               </td>
               <td className="px-4 py-4 text-slate-600">
-                <p>{item.responsible_name || 'Sem responsavel'}</p>
+                <p>{item.responsible_name || 'Sem responsável'}</p>
                 <p className="text-xs text-slate-400">{item.mobile || item.phone || 'Sem telefone'}</p>
               </td>
               <td className="px-4 py-4 text-slate-600">
-                {item.city ? `${item.city}${item.state ? `/${item.state}` : ''}` : 'Nao informado'}
+                {item.city ? `${item.city}${item.state ? `/${item.state}` : ''}` : 'Não informado'}
               </td>
               <td className="px-4 py-4">
                 <Badge tone={item.active ? 'green' : 'gray'}>{item.active ? 'ativo' : 'inativo'}</Badge>
@@ -86,7 +86,7 @@ export default function Index({ items }) {
         onClose={closeDialog}
         onConfirm={confirmInactivate}
         title="Inativar fornecedor"
-        description={`O fornecedor ${selectedItem?.name || ''} deixara de ficar disponivel na operacao ativa.`}
+        description={`O fornecedor ${selectedItem?.name || ''} deixará de ficar disponível na operação ativa.`}
         confirmLabel="Inativar fornecedor"
       />
     </AppLayout>
