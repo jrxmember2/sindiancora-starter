@@ -5,7 +5,7 @@
 - Fase 0: concluida no codigo
 - Fase 1: concluida no codigo
 - Fase 2: concluida no codigo
-- Fase 3: parcial
+- Fase 3: concluida no codigo
 - Fase 4 em diante: nao iniciadas
 
 ## Fase 0 - Preparacao, documentacao e arquitetura
@@ -97,11 +97,21 @@ Completar o coracao comercial do SaaS.
 
 ### Backlog executavel
 
-- [ ] `license_history`
-- [ ] `license_usage`
-- [ ] completar `LicenseGuard`
-- [ ] tela de uso da licenca
-- [ ] alertas de limite
+- [x] `license_history`
+- [x] `license_usage`
+- [x] completar `LicenseGuard`
+- [x] tela de uso da licenca
+- [x] alertas de limite
+- [x] bloquear escrita em modo somente leitura
+- [x] testes de contrato e bloqueio de modulo
+
+### Criterios de aceite
+
+- superadmin cria e atualiza licencas com historico registrado
+- uso da licenca e sincronizado por empresa
+- empresa consegue visualizar contrato, modulos e limites em "Minha licenca"
+- modulos bloqueados nao podem ser acessados por URL direta
+- licenca em modo somente leitura permite consulta e bloqueia escrita
 
 ## Fase 4 - Usuarios e permissoes
 

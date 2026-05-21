@@ -12,9 +12,14 @@ class EnsureLicenseIsActive
     public function handle(Request $request, Closure $next): Response
     {
         $company = app('currentCompany');
+        $status = app(LicenseGuard::class)->status($company);
 
-        if (! $company || ! app(LicenseGuard::class)->isActive($company)) {
-            return redirect()->route('dashboard')->with('error', 'A licenca desta empresa nao esta ativa.');
+        if (! $status['allows_access']) {
+            return redirect()->route('dashboard')->with('error', $status['message']);
+        }
+
+        if (! $status['allows_write'] && ! in_array($request->method(), ['GET', 'HEAD', 'OPTIONS'], true)) {
+            return redirect()->route('dashboard')->with('error', $status['message']);
         }
 
         return $next($request);

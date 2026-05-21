@@ -24,7 +24,11 @@ Cada empresa cliente recebe uma licenca contratual personalizada, configurada ma
 - `licenses`
 - `modules`
 - `license_modules`
+- `license_history`
+- `license_usage`
 - `App\Services\Licensing\LicenseGuard`
+- `App\Services\Licensing\LicenseHistoryService`
+- `App\Services\Licensing\LicenseUsageService`
 
 ## Regras atuais implementadas
 
@@ -32,16 +36,21 @@ Cada empresa cliente recebe uma licenca contratual personalizada, configurada ma
 - `canAccessModule`
 - `canCreateCondominium`
 - `canCreateInternalUser`
-- `usage`
-
-## Regras que precisam entrar nas proximas fases
-
 - `canUseStorage`
 - `canUseAI`
 - `canUseWhatsApp`
-- historico de alteracoes de licenca
-- medicao persistida de consumo
-- alertas de limite proximo
+- `usage`
+- `alerts`
+- `status`
+- bloqueio de escrita em modo somente leitura
+- tela "Minha Licenca"
+
+## Regras que precisam entrar nas proximas fases
+
+- anexos contratuais
+- workflow de aprovacao comercial
+- conciliacao financeira automatica
+- consumo real de storage, WhatsApp e IA pelos modulos futuros
 
 ## Camadas de bloqueio obrigatorias
 
@@ -68,8 +77,7 @@ Mesmo com modulo liberado, o usuario ainda precisa de permissao funcional para e
 
 ## Evolucao planejada
 
-- `license_history`
-- `license_usage`
-- tela "Minha Licenca"
 - notas e anexos contratuais
 - alerta de renovacao e inadimplencia
+- workflows comerciais e financeiros
+- consumo real de storage, WhatsApp e IA alimentado pelos modulos operacionais

@@ -21,11 +21,12 @@ import { cn } from '@/lib/utils';
 
 const nav = [
   { label: 'Dashboard', href: '/dashboard', icon: Gauge },
-  { label: 'Chamados', href: '/app/issues', icon: TicketCheck },
-  { label: 'Condominios', href: '/app/condominiums', icon: Building2 },
-  { label: 'Fornecedores', href: '/app/suppliers', icon: Wrench },
-  { label: 'Documentos', href: '/app/documents', icon: FileText },
-  { label: 'Cronograma', href: '#', icon: CalendarDays, locked: true },
+  { label: 'Minha licenca', href: '/app/license', icon: ShieldCheck },
+  { label: 'Chamados', href: '/app/issues', icon: TicketCheck, moduleKey: 'chamados' },
+  { label: 'Condominios', href: '/app/condominiums', icon: Building2, moduleKey: 'configuracoes' },
+  { label: 'Fornecedores', href: '/app/suppliers', icon: Wrench, moduleKey: 'fornecedores' },
+  { label: 'Documentos', href: '/app/documents', icon: FileText, moduleKey: 'documentos' },
+  { label: 'Cronograma', href: '/app/cronograma', icon: CalendarDays, moduleKey: 'cronograma', comingSoon: true },
 ];
 
 const superNav = [
@@ -40,7 +41,11 @@ export default function AppLayout({ title, children }) {
   const { auth, tenant, flash } = page.props;
   const { url } = page;
   const isSuperadmin = auth?.user?.is_superadmin;
-  const items = isSuperadmin ? [...nav, ...superNav] : nav;
+  const moduleAccess = tenant?.moduleAccess || {};
+  const items = isSuperadmin ? [...nav, ...superNav] : nav.map((item) => ({
+    ...item,
+    locked: item.moduleKey ? moduleAccess[item.moduleKey] === false : false,
+  }));
   const [menuOpen, setMenuOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const lastFlashRef = useRef('');
@@ -227,15 +232,17 @@ function SidebarNav({ items, url, mobile = false }) {
         const classes = cn(
           'group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition',
           active ? 'bg-slate-950 text-white shadow-soft' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950',
-          item.locked && 'cursor-not-allowed opacity-70'
+          (item.locked || item.comingSoon) && 'cursor-not-allowed opacity-70'
         );
 
-        if (item.locked || item.href === '#') {
+        if (item.locked || item.comingSoon || item.href === '#') {
           return (
             <div key={item.label} className={classes}>
               <Icon className="h-4 w-4" />
               <span className="flex-1">{item.label}</span>
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-500">em breve</span>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-500">
+                {item.comingSoon ? 'em breve' : 'bloqueado'}
+              </span>
             </div>
           );
         }

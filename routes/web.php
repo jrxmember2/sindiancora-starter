@@ -10,6 +10,7 @@ use App\Http\Controllers\SuperAdmin\VersionController;
 use App\Http\Controllers\Tenant\CondominiumController;
 use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\IssueController;
+use App\Http\Controllers\Tenant\LicenseOverviewController;
 use App\Http\Controllers\Tenant\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +33,14 @@ Route::middleware('auth')->group(function () {
         Route::get('versions', VersionController::class)->name('versions.index');
     });
 
-    Route::prefix('app')->middleware(['company.selected', 'license.active'])->group(function () {
-        Route::resource('condominiums', CondominiumController::class)->middleware('module:configuracoes');
-        Route::resource('suppliers', SupplierController::class)->middleware('module:fornecedores');
-        Route::resource('issues', IssueController::class)->middleware('module:chamados');
-        Route::resource('documents', DocumentController::class)->middleware('module:documentos');
+    Route::prefix('app')->middleware(['company.selected'])->group(function () {
+        Route::get('license', LicenseOverviewController::class)->name('tenant.license.show');
+
+        Route::middleware(['license.active'])->group(function () {
+            Route::resource('condominiums', CondominiumController::class)->middleware('module:configuracoes');
+            Route::resource('suppliers', SupplierController::class)->middleware('module:fornecedores');
+            Route::resource('issues', IssueController::class)->middleware('module:chamados');
+            Route::resource('documents', DocumentController::class)->middleware('module:documentos');
+        });
     });
 });

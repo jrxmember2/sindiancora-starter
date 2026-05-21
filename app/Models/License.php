@@ -35,4 +35,14 @@ class License extends Model
             ->withPivot(['enabled'])
             ->withTimestamps();
     }
+
+    public function historyEntries()
+    {
+        return $this->hasMany(LicenseHistory::class)->latest('created_at');
+    }
+
+    public function usageSnapshot()
+    {
+        return $this->hasOne(LicenseUsage::class);
+    }
 }

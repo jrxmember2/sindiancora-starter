@@ -34,6 +34,9 @@ A base atual ja entrega:
 - componentes base do painel para tabela, drawer, modal, confirmacao e toast
 - endurecimento da troca de empresa e do route model binding tenant-aware
 - preparacao de `user_condominiums` para escopo operacional por condominio
+- historico contratual de licencas em banco
+- snapshots de uso da licenca por empresa
+- tela "Minha licenca" com status, alertas, limites e modulos liberados
 
 ## Stack
 
@@ -132,8 +135,8 @@ APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
-APP_VERSION=0.3.0
-APP_RELEASE_NAME=Tenant Hardening
+APP_VERSION=0.4.0
+APP_RELEASE_NAME=Contract Licensing
 APP_RELEASE_STAGE=production
 APP_RELEASED_AT=2026-05-21
 APP_BUILD_SHA=
@@ -181,10 +184,9 @@ Guia detalhado:
 
 ## Proximo passo recomendado
 
-Nao pular para modulos avancados antes de estabilizar:
+Com a Fase 3 concluida, a prioridade agora e:
 
-1. documentacao e padroes da Fase 0
-2. testes base
-3. tenancy
-4. licenciamento
-5. permissoes
+1. usuarios internos por empresa
+2. roles, policies e gates
+3. vinculo usuario x condominio
+4. endurecimento de autorizacao por modulo e acao

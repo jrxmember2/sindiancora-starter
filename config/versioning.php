@@ -2,8 +2,8 @@
 
 return [
     'current' => [
-        'number' => env('APP_VERSION', '0.3.0'),
-        'name' => env('APP_RELEASE_NAME', 'Tenant Hardening'),
+        'number' => env('APP_VERSION', '0.4.0'),
+        'name' => env('APP_RELEASE_NAME', 'Contract Licensing'),
         'stage' => env('APP_RELEASE_STAGE', 'production'),
         'released_at' => env('APP_RELEASED_AT', '2026-05-21'),
         'build_sha' => env('APP_BUILD_SHA', env('GIT_SHA')),
@@ -11,6 +11,19 @@ return [
     ],
 
     'history' => [
+        [
+            'number' => '0.4.0',
+            'name' => 'Contract Licensing',
+            'stage' => 'production',
+            'released_at' => '2026-05-21',
+            'visibility' => 'superadmin',
+            'highlights' => [
+                'Historico de alteracoes de licenca e snapshots de uso passaram a ser persistidos em banco.',
+                'LicenseGuard ganhou leitura de status, alertas, consumo e bloqueios para storage, IA e WhatsApp.',
+                'Tela Minha licenca criada para a empresa acompanhar contrato, limites, modulos e alertas.',
+                'Modo somente leitura e bloqueio contratual passaram a ser aplicados nas rotas operacionais.',
+            ],
+        ],
         [
             'number' => '0.3.0',
             'name' => 'Tenant Hardening',

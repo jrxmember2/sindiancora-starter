@@ -43,6 +43,16 @@ class Company extends Model
         return $this->hasOne(License::class)->whereIn('status', ['active', 'trial'])->latestOfMany();
     }
 
+    public function latestLicense()
+    {
+        return $this->hasOne(License::class)->latestOfMany();
+    }
+
+    public function licenseUsage()
+    {
+        return $this->hasOne(LicenseUsage::class);
+    }
+
     public function condominiums()
     {
         return $this->hasMany(Condominium::class);

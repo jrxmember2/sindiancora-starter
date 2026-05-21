@@ -2,6 +2,7 @@ import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 import Button from '@/Components/Button';
+import Badge from '@/Components/Badge';
 import { Card, CardHeader } from '@/Components/Card';
 import { Checkbox, CheckboxCard, Field, Input, Select, Textarea } from '@/Components/Form';
 
@@ -9,7 +10,16 @@ const statusOptions = ['active', 'trial', 'pending', 'expired', 'suspended', 'bl
 const financialStatusOptions = ['current', 'due', 'overdue', 'negotiated', 'suspended', 'canceled'];
 const billingTypeOptions = ['monthly', 'quarterly', 'yearly', 'custom'];
 
-export default function Form({ license, companies, modules, enabledModules = [] }) {
+export default function Form({
+  license,
+  companies,
+  modules,
+  enabledModules = [],
+  usage = null,
+  alerts = [],
+  history = [],
+  statusSummary = null,
+}) {
   const editing = Boolean(license);
   const { data, setData, post, put, processing, errors } = useForm({
     company_id: license?.company_id || '',
@@ -59,6 +69,79 @@ export default function Form({ license, companies, modules, enabledModules = [] 
       <Head title={editing ? 'Editar licenca' : 'Nova licenca'} />
 
       <form onSubmit={submit} className="space-y-6">
+        {editing && (
+          <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+            <Card>
+              <CardHeader
+                title="Saude contratual"
+                description="Leitura rapida do status operacional, consumo e alertas da empresa vinculada."
+              />
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <MetricCard
+                  label="Status operacional"
+                  value={statusSummary?.label || 'Sem leitura'}
+                  tone={statusTone(statusSummary?.code)}
+                />
+                <MetricCard
+                  label="Mensagem atual"
+                  value={statusSummary?.message || 'Sem mensagem disponivel.'}
+                  compact
+                />
+                <MetricCard
+                  label="Condominios ativos"
+                  value={formatUsage(usage?.condominiums)}
+                />
+                <MetricCard
+                  label="Usuarios internos"
+                  value={formatUsage(usage?.internal_users)}
+                />
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {alerts.length ? alerts.map((alert) => (
+                  <div key={`${alert.title}-${alert.message}`} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                    <Badge tone={alert.tone || 'gray'}>{alert.title}</Badge>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{alert.message}</p>
+                  </div>
+                )) : (
+                  <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">
+                    Nenhum alerta contratual para esta licenca neste momento.
+                  </div>
+                )}
+              </div>
+            </Card>
+
+            <Card>
+              <CardHeader
+                title="Historico recente"
+                description="Ultimas mudancas registradas para auditoria comercial da licenca."
+              />
+
+              <div className="space-y-3">
+                {history.length ? history.map((entry) => (
+                  <div key={entry.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge tone="blue">{entry.change_type}</Badge>
+                      <span className="text-xs font-medium text-slate-400">{formatDateTime(entry.created_at)}</span>
+                    </div>
+                    <p className="mt-3 text-sm font-semibold text-slate-700">
+                      {entry.changed_by || 'Sistema'}
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">
+                      {entry.notes || 'Alteracao registrada sem observacao adicional.'}
+                    </p>
+                  </div>
+                )) : (
+                  <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">
+                    Nenhum historico registrado ainda para esta licenca.
+                  </div>
+                )}
+              </div>
+            </Card>
+          </div>
+        )}
+
         <Card>
           <CardHeader
             title="Contrato e ciclo comercial"
@@ -220,4 +303,61 @@ function toDateInput(value) {
   }
 
   return String(value).slice(0, 10);
+}
+
+function MetricCard({ label, value, tone = null, compact = false }) {
+  return (
+    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <p className="text-sm font-semibold text-slate-500">{label}</p>
+      {tone ? (
+        <div className="mt-3">
+          <Badge tone={tone}>{value}</Badge>
+        </div>
+      ) : (
+        <p className={`mt-3 ${compact ? 'text-sm leading-6 text-slate-600' : 'text-2xl font-black tracking-tight text-slate-950'}`}>
+          {value}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function formatUsage(metric) {
+  if (!metric) {
+    return '0 de 0';
+  }
+
+  return `${metric.used} de ${metric.limit}`;
+}
+
+function statusTone(code) {
+  if (['active', 'trial'].includes(code)) {
+    return 'green';
+  }
+
+  if (['read_only', 'expired_read_only'].includes(code)) {
+    return 'yellow';
+  }
+
+  return 'red';
+}
+
+function formatDateTime(value) {
+  if (!value) {
+    return 'Sem data';
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
 }

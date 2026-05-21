@@ -19,6 +19,7 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
         $company = app()->bound('currentCompany') ? app('currentCompany') : null;
+        $licenseGuard = app(LicenseGuard::class);
 
         return array_merge(parent::share($request), [
             'auth' => [
@@ -37,7 +38,10 @@ class HandleInertiaRequests extends Middleware
                     'status' => $company->status,
                 ] : null,
                 'companies' => $user ? $this->tenantResolver->companiesForUser($user) : [],
-                'licenseUsage' => $company ? app(LicenseGuard::class)->usage($company) : null,
+                'licenseStatus' => $company ? $licenseGuard->status($company) : null,
+                'licenseAlerts' => $company ? $licenseGuard->alerts($company) : [],
+                'licenseUsage' => $company ? $licenseGuard->usage($company) : null,
+                'moduleAccess' => $company ? $licenseGuard->moduleAccessMap($company) : [],
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

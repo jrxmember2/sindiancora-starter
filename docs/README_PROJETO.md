@@ -4,7 +4,7 @@
 
 SindiAncora e um SaaS multiempresa para gestao condominial com foco em operacao, controle contratual e evolucao segura por fases.
 
-Este documento registra a base formalizada do projeto apos as Fases 0, 1 e 2, organizando:
+Este documento registra a base formalizada do projeto apos as Fases 0, 1, 2 e 3, organizando:
 
 - arquitetura proposta
 - padroes de implementacao
@@ -23,9 +23,9 @@ Este documento registra a base formalizada do projeto apos as Fases 0, 1 e 2, or
 
 ## Versao atual da base
 
-- versao: `0.3.0`
-- release: `Tenant Hardening`
-- status: base publicada com login funcional, componentes padronizados e isolamento multiempresa endurecido
+- versao: `0.4.0`
+- release: `Contract Licensing`
+- status: base publicada com login funcional, tenancy endurecido e licenciamento contratual operacional
 
 ## O que esta implementado
 
@@ -46,12 +46,14 @@ Este documento registra a base formalizada do projeto apos as Fases 0, 1 e 2, or
 - validacao da empresa ativa antes do route model binding
 - troca de empresa limitada a vinculos ativos
 - preparacao de `user_condominiums` e escopo por condominio em chamados/documentos
+- historico de licenca em banco
+- uso de licenca persistido por empresa
+- tela "Minha licenca" para leitura operacional do contrato
+- alertas contratuais e status de somente leitura
 
 ## O que ainda nao esta endurecido
 
 - policies e gates
-- historico de licenca em banco
-- uso de licenca em banco
 - uploads reais de documentos
 - worker/scheduler ativos em producao
 - auditoria automatica
