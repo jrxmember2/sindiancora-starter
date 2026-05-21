@@ -5,11 +5,12 @@ use App\Http\Middleware\EnsureLicenseIsActive;
 use App\Http\Middleware\EnsureModuleIsEnabled;
 use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\SetCurrentCompany;
+use App\Http\Middleware\SubstituteTenantBindings;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,10 +26,14 @@ return Application::configure(basePath: dirname(__DIR__))
             Request::HEADER_X_FORWARDED_PREFIX |
             Request::HEADER_X_FORWARDED_AWS_ELB);
 
-        $middleware->web(append: [
-            HandleInertiaRequests::class,
-            SetCurrentCompany::class,
-        ]);
+        $middleware->web(
+            append: [
+                HandleInertiaRequests::class,
+            ],
+            replace: [
+                SubstituteBindings::class => SubstituteTenantBindings::class,
+            ],
+        );
 
         $middleware->alias([
             'superadmin' => EnsureSuperAdmin::class,

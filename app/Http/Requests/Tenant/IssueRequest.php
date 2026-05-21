@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Tenant;
 
+use App\Services\Tenancy\TenantResolver;
+use Illuminate\Validation\Validator;
 use Illuminate\Validation\Rule;
 
 class IssueRequest extends TenantFormRequest
@@ -24,5 +26,21 @@ class IssueRequest extends TenantFormRequest
         $this->merge([
             'shared_with_residents' => $this->boolean('shared_with_residents'),
         ]);
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $user = $this->user();
+            $company = app()->bound('currentCompany') ? app('currentCompany') : null;
+
+            if (! $user || ! $company) {
+                return;
+            }
+
+            if (! app(TenantResolver::class)->canAccessCondominium($user, $company, $this->input('condominium_id'))) {
+                $validator->errors()->add('condominium_id', 'Voce nao pode operar neste condominio.');
+            }
+        });
     }
 }

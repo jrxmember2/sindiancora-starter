@@ -13,8 +13,8 @@ class EnsureLicenseIsActive
     {
         $company = app('currentCompany');
 
-        if (! app(LicenseGuard::class)->isActive($company)) {
-            return redirect()->route('dashboard')->with('error', 'A licença desta empresa não está ativa.');
+        if (! $company || ! app(LicenseGuard::class)->isActive($company)) {
+            return redirect()->route('dashboard')->with('error', 'A licenca desta empresa nao esta ativa.');
         }
 
         return $next($request);

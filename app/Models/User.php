@@ -31,6 +31,14 @@ class User extends Authenticatable
         return $this->hasMany(CompanyUser::class);
     }
 
+    public function activeCompanyUserFor(Company $company): ?CompanyUser
+    {
+        return $this->companyUsers()
+            ->where('company_id', $company->id)
+            ->where('status', 'active')
+            ->first();
+    }
+
     public function isSuperAdmin(): bool
     {
         return (bool) $this->is_superadmin;

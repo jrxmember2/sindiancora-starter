@@ -22,4 +22,10 @@ class CompanyUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function condominiums()
+    {
+        return $this->belongsToMany(Condominium::class, 'user_condominiums')
+            ->withTimestamps();
+    }
 }

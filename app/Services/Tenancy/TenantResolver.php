@@ -1,0 +1,170 @@
+<?php
+
+namespace App\Services\Tenancy;
+
+use App\Models\Company;
+use App\Models\CompanyUser;
+use App\Models\Condominium;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
+class TenantResolver
+{
+    public function bindCurrentCompany(Request $request): ?Company
+    {
+        $company = $this->resolveCurrentCompany($request);
+
+        app()->instance('currentCompany', $company);
+
+        return $company;
+    }
+
+    public function resolveCurrentCompany(Request $request): ?Company
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            $this->forgetCurrentCompanyFromSession($request);
+
+            return null;
+        }
+
+        $company = null;
+        $companyId = $request->hasSession() ? $request->session()->get('current_company_id') : null;
+
+        if ($companyId) {
+            $company = $user->isSuperAdmin()
+                ? Company::query()->withoutGlobalScopes()->find($companyId)
+                : $this->activeCompaniesQuery($user)->whereKey($companyId)->first();
+        }
+
+        if (! $company && ! $user->isSuperAdmin()) {
+            $company = $this->activeCompaniesQuery($user)->first();
+        }
+
+        if ($request->hasSession()) {
+            if ($company) {
+                $request->session()->put('current_company_id', $company->id);
+            } else {
+                $this->forgetCurrentCompanyFromSession($request);
+            }
+        }
+
+        return $company;
+    }
+
+    public function companiesForUser(User $user): Collection
+    {
+        if ($user->isSuperAdmin()) {
+            return Company::query()
+                ->withoutGlobalScopes()
+                ->orderBy('name')
+                ->get(['id', 'name', 'slug', 'status']);
+        }
+
+        return $this->activeCompaniesQuery($user)
+            ->orderBy('companies.name')
+            ->get(['companies.id', 'companies.name', 'companies.slug', 'companies.status']);
+    }
+
+    public function currentCompanyUser(User $user, Company $company): ?CompanyUser
+    {
+        if ($user->isSuperAdmin()) {
+            return null;
+        }
+
+        return CompanyUser::query()
+            ->where('company_id', $company->id)
+            ->where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+    }
+
+    public function accessibleCondominiumIds(User $user, Company $company): ?Collection
+    {
+        if ($user->isSuperAdmin()) {
+            return null;
+        }
+
+        $companyUser = $this->currentCompanyUser($user, $company);
+
+        if (! $companyUser) {
+            return collect();
+        }
+
+        $ids = $companyUser->condominiums()->pluck('condominiums.id');
+
+        return $ids->isEmpty() ? null : $ids;
+    }
+
+    public function accessibleCondominiumsQuery(User $user, Company $company): Builder
+    {
+        $query = Condominium::query();
+        $accessibleIds = $this->accessibleCondominiumIds($user, $company);
+
+        if ($accessibleIds !== null) {
+            $query->whereKey($accessibleIds->all());
+        }
+
+        return $query;
+    }
+
+    public function scopeByAccessibleCondominiums(
+        Builder $query,
+        User $user,
+        Company $company,
+        string $column = 'condominium_id',
+        bool $includeNull = false,
+    ): Builder {
+        $accessibleIds = $this->accessibleCondominiumIds($user, $company);
+
+        if ($accessibleIds === null) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $inner) use ($accessibleIds, $column, $includeNull) {
+            $inner->whereIn($column, $accessibleIds->all());
+
+            if ($includeNull) {
+                $inner->orWhereNull($column);
+            }
+        });
+    }
+
+    public function canAccessCondominium(User $user, Company $company, int|string|null $condominiumId): bool
+    {
+        if ($condominiumId === null) {
+            return true;
+        }
+
+        $accessibleIds = $this->accessibleCondominiumIds($user, $company);
+
+        return $accessibleIds === null || $accessibleIds->contains((int) $condominiumId);
+    }
+
+    public function canSwitchToCompany(User $user, int $companyId): bool
+    {
+        if ($user->isSuperAdmin()) {
+            return Company::query()->withoutGlobalScopes()->whereKey($companyId)->exists();
+        }
+
+        return $this->activeCompaniesQuery($user)->whereKey($companyId)->exists();
+    }
+
+    protected function activeCompaniesQuery(User $user): BelongsToMany
+    {
+        return $user->companies()
+            ->wherePivot('status', 'active')
+            ->where('companies.status', 'active');
+    }
+
+    protected function forgetCurrentCompanyFromSession(Request $request): void
+    {
+        if ($request->hasSession()) {
+            $request->session()->forget('current_company_id');
+        }
+    }
+}

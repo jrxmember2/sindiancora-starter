@@ -32,6 +32,8 @@ A base atual ja entrega:
 - `LicenseGuard` e middlewares iniciais de licenca e modulo
 - `Form Requests` nos fluxos principais
 - componentes base do painel para tabela, drawer, modal, confirmacao e toast
+- endurecimento da troca de empresa e do route model binding tenant-aware
+- preparacao de `user_condominiums` para escopo operacional por condominio
 
 ## Stack
 
@@ -130,8 +132,8 @@ APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
-APP_VERSION=0.2.0
-APP_RELEASE_NAME=Web Foundation
+APP_VERSION=0.3.0
+APP_RELEASE_NAME=Tenant Hardening
 APP_RELEASE_STAGE=production
 APP_RELEASED_AT=2026-05-21
 APP_BUILD_SHA=
@@ -175,6 +177,7 @@ Guia detalhado:
 - [docs/PERMISSOES.md](docs/PERMISSOES.md)
 - [docs/ROADMAP.md](docs/ROADMAP.md)
 - [docs/CHECKLIST_TESTES.md](docs/CHECKLIST_TESTES.md)
+- [docs/PROMPTS_FASES.md](docs/PROMPTS_FASES.md)
 
 ## Proximo passo recomendado
 

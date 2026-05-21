@@ -4,7 +4,7 @@
 
 SindiAncora e um SaaS multiempresa para gestao condominial com foco em operacao, controle contratual e evolucao segura por fases.
 
-Este documento registra a base formalizada do projeto apos as Fases 0 e 1, organizando:
+Este documento registra a base formalizada do projeto apos as Fases 0, 1 e 2, organizando:
 
 - arquitetura proposta
 - padroes de implementacao
@@ -23,9 +23,9 @@ Este documento registra a base formalizada do projeto apos as Fases 0 e 1, organ
 
 ## Versao atual da base
 
-- versao: `0.2.0`
-- release: `Web Foundation`
-- status: base publicada com login funcional, dashboard revisado, componentes padronizados e formularios endurecidos
+- versao: `0.3.0`
+- release: `Tenant Hardening`
+- status: base publicada com login funcional, componentes padronizados e isolamento multiempresa endurecido
 
 ## O que esta implementado
 
@@ -43,6 +43,9 @@ Este documento registra a base formalizada do projeto apos as Fases 0 e 1, organ
 - tela de versionamento exclusiva do superadmin
 - Form Requests nos fluxos principais
 - componentes base do painel para tabela, drawer, modal, confirmacao e toast
+- validacao da empresa ativa antes do route model binding
+- troca de empresa limitada a vinculos ativos
+- preparacao de `user_condominiums` e escopo por condominio em chamados/documentos
 
 ## O que ainda nao esta endurecido
 
@@ -62,3 +65,4 @@ Este documento registra a base formalizada do projeto apos as Fases 0 e 1, organ
 4. [PERMISSOES.md](PERMISSOES.md)
 5. [DEPLOY_EASYPANEL.md](DEPLOY_EASYPANEL.md)
 6. [ROADMAP.md](ROADMAP.md)
+7. [PROMPTS_FASES.md](PROMPTS_FASES.md)

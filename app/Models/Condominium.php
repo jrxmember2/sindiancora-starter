@@ -19,5 +19,9 @@ class Condominium extends Model
         return ['mandate_start'=>'date','mandate_end'=>'date'];
     }
 
-
+    public function companyUsers()
+    {
+        return $this->belongsToMany(CompanyUser::class, 'user_condominiums')
+            ->withTimestamps();
+    }
 }

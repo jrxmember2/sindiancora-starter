@@ -4,7 +4,7 @@
 
 - Fase 0: concluida no codigo
 - Fase 1: concluida no codigo
-- Fase 2: parcial
+- Fase 2: concluida no codigo
 - Fase 3: parcial
 - Fase 4 em diante: nao iniciadas
 
@@ -77,10 +77,17 @@ Garantir isolamento seguro entre tenants.
 
 ### Backlog executavel
 
-- [ ] endurecer troca de empresa
-- [ ] criar testes de vazamento entre empresas
-- [ ] revisar queries operacionais por `company_id`
-- [ ] preparar `user_condominiums`
+- [x] endurecer troca de empresa
+- [x] criar testes de vazamento entre empresas
+- [x] revisar queries operacionais por `company_id`
+- [x] preparar `user_condominiums`
+
+### Criterios de aceite
+
+- empresa ativa resolvida antes do route model binding
+- usuario comum nao troca para empresa inativa, suspensa ou sem vinculo ativo
+- chamados e documentos respeitam company_id e, quando houver, escopo por condominio
+- testes de tenancy cobrindo URL direta, troca de empresa e escopo por condominio
 
 ## Fase 3 - Licenciamento contratual
 

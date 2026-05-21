@@ -2,8 +2,8 @@
 
 return [
     'current' => [
-        'number' => env('APP_VERSION', '0.2.0'),
-        'name' => env('APP_RELEASE_NAME', 'Web Foundation'),
+        'number' => env('APP_VERSION', '0.3.0'),
+        'name' => env('APP_RELEASE_NAME', 'Tenant Hardening'),
         'stage' => env('APP_RELEASE_STAGE', 'production'),
         'released_at' => env('APP_RELEASED_AT', '2026-05-21'),
         'build_sha' => env('APP_BUILD_SHA', env('GIT_SHA')),
@@ -11,6 +11,19 @@ return [
     ],
 
     'history' => [
+        [
+            'number' => '0.3.0',
+            'name' => 'Tenant Hardening',
+            'stage' => 'production',
+            'released_at' => '2026-05-21',
+            'visibility' => 'superadmin',
+            'highlights' => [
+                'Resolucao segura da empresa ativa antes do route model binding para endurecer o tenancy.',
+                'Troca de empresa limitada a vinculos ativos e empresas ativas para usuarios nao superadmin.',
+                'Tabela user_condominiums criada para preparar o escopo por condominio dos usuarios internos.',
+                'Chamados, documentos, dashboard e listagens tenant passaram a respeitar vinculos por condominio.',
+            ],
+        ],
         [
             'number' => '0.2.0',
             'name' => 'Web Foundation',

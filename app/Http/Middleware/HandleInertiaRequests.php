@@ -3,12 +3,17 @@
 namespace App\Http\Middleware;
 
 use App\Services\Licensing\LicenseGuard;
+use App\Services\Tenancy\TenantResolver;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
     protected $rootView = 'app';
+
+    public function __construct(protected TenantResolver $tenantResolver)
+    {
+    }
 
     public function share(Request $request): array
     {
@@ -29,8 +34,9 @@ class HandleInertiaRequests extends Middleware
                     'id' => $company->id,
                     'name' => $company->name,
                     'slug' => $company->slug,
+                    'status' => $company->status,
                 ] : null,
-                'companies' => $user ? $user->companies()->select('companies.id', 'companies.name', 'companies.slug')->get() : [],
+                'companies' => $user ? $this->tenantResolver->companiesForUser($user) : [],
                 'licenseUsage' => $company ? app(LicenseGuard::class)->usage($company) : null,
             ],
             'flash' => [

@@ -78,7 +78,184 @@ class TenantIsolationTest extends TestCase
             ->assertForbidden();
     }
 
-    private function createLicensedTenantUser(): array
+    public function test_company_switch_allows_only_active_memberships(): void
+    {
+        [$user, $companyA] = $this->createLicensedTenantUser();
+        $companyB = Company::factory()->create(['status' => 'active']);
+        $companyC = Company::factory()->create(['status' => 'inactive']);
+
+        $user->companies()->attach($companyB->id, [
+            'role' => 'gestor',
+            'status' => 'inactive',
+            'can_access_whatsapp' => false,
+            'only_responsible_issues' => false,
+        ]);
+
+        $user->companies()->attach($companyC->id, [
+            'role' => 'gestor',
+            'status' => 'active',
+            'can_access_whatsapp' => false,
+            'only_responsible_issues' => false,
+        ]);
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $companyA->id])
+            ->post('/trocar-empresa', ['company_id' => $companyB->id])
+            ->assertForbidden();
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $companyA->id])
+            ->post('/trocar-empresa', ['company_id' => $companyC->id])
+            ->assertForbidden();
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $companyA->id])
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('tenant.companies', 1)
+                ->where('tenant.companies.0.id', $companyA->id));
+    }
+
+    public function test_route_access_does_not_resolve_issue_from_another_company(): void
+    {
+        [$user, $companyA] = $this->createLicensedTenantUser();
+        $companyB = Company::factory()->create();
+
+        $condominiumA = Condominium::query()->create([
+            'company_id' => $companyA->id,
+            'name' => 'Condominio Alfa',
+            'status' => 'active',
+            'slug' => 'condominio-alfa',
+        ]);
+
+        $condominiumB = Condominium::query()->create([
+            'company_id' => $companyB->id,
+            'name' => 'Condominio Beta',
+            'status' => 'active',
+            'slug' => 'condominio-beta',
+        ]);
+
+        Issue::query()->create([
+            'company_id' => $companyA->id,
+            'condominium_id' => $condominiumA->id,
+            'subject' => 'Chamado correto',
+            'description' => 'Pertence ao tenant ativo.',
+            'status' => 'pendente',
+            'priority' => 'media',
+            'origin' => 'interno',
+            'opened_at' => now(),
+        ]);
+
+        $issueFromOtherCompany = Issue::query()->withoutGlobalScopes()->create([
+            'company_id' => $companyB->id,
+            'condominium_id' => $condominiumB->id,
+            'subject' => 'Chamado indevido',
+            'description' => 'Nao deve abrir por URL direta.',
+            'status' => 'pendente',
+            'priority' => 'media',
+            'origin' => 'interno',
+            'opened_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $companyA->id])
+            ->get("/app/issues/{$issueFromOtherCompany->id}/edit")
+            ->assertNotFound();
+    }
+
+    public function test_user_with_condominium_assignments_only_sees_assigned_issues(): void
+    {
+        [$user, $company] = $this->createLicensedTenantUser();
+        $companyUser = $user->activeCompanyUserFor($company);
+
+        $condominiumA = Condominium::query()->create([
+            'company_id' => $company->id,
+            'name' => 'Condominio Acesso',
+            'status' => 'active',
+            'slug' => 'condominio-acesso',
+        ]);
+
+        $condominiumB = Condominium::query()->create([
+            'company_id' => $company->id,
+            'name' => 'Condominio Bloqueado',
+            'status' => 'active',
+            'slug' => 'condominio-bloqueado',
+        ]);
+
+        $companyUser->condominiums()->attach($condominiumA->id);
+
+        Issue::query()->create([
+            'company_id' => $company->id,
+            'condominium_id' => $condominiumA->id,
+            'subject' => 'Chamado autorizado',
+            'description' => 'Pode aparecer.',
+            'status' => 'pendente',
+            'priority' => 'media',
+            'origin' => 'interno',
+            'opened_at' => now(),
+        ]);
+
+        Issue::query()->create([
+            'company_id' => $company->id,
+            'condominium_id' => $condominiumB->id,
+            'subject' => 'Chamado bloqueado',
+            'description' => 'Nao pode aparecer.',
+            'status' => 'pendente',
+            'priority' => 'media',
+            'origin' => 'interno',
+            'opened_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $company->id])
+            ->get('/app/issues')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Tenant/Issues/Index')
+                ->has('issues.data', 1)
+                ->where('issues.data.0.subject', 'Chamado autorizado'));
+    }
+
+    public function test_user_cannot_create_issue_for_unassigned_condominium(): void
+    {
+        [$user, $company] = $this->createLicensedTenantUser();
+        $companyUser = $user->activeCompanyUserFor($company);
+
+        $condominiumA = Condominium::query()->create([
+            'company_id' => $company->id,
+            'name' => 'Condominio Acesso',
+            'status' => 'active',
+            'slug' => 'condominio-acesso',
+        ]);
+
+        $condominiumB = Condominium::query()->create([
+            'company_id' => $company->id,
+            'name' => 'Condominio Bloqueado',
+            'status' => 'active',
+            'slug' => 'condominio-bloqueado',
+        ]);
+
+        $companyUser->condominiums()->attach($condominiumA->id);
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $company->id])
+            ->from('/app/issues/create')
+            ->post('/app/issues', [
+                'condominium_id' => $condominiumB->id,
+                'subject' => 'Tentativa indevida',
+                'description' => 'Nao deveria passar.',
+                'status' => 'pendente',
+                'priority' => 'media',
+                'shared_with_residents' => false,
+            ])
+            ->assertRedirect('/app/issues/create')
+            ->assertSessionHasErrors('condominium_id');
+
+        $this->assertDatabaseCount('issues', 0);
+    }
+
+    private function createLicensedTenantUser(array $moduleKeys = ['chamados']): array
     {
         $user = User::factory()->create();
         $company = Company::factory()->create();
@@ -113,15 +290,17 @@ class TenantIsolationTest extends TestCase
             'auto_suspend_when_overdue' => false,
         ]);
 
-        $module = Module::query()->create([
-            'key' => 'chamados',
-            'name' => 'Chamados',
-            'description' => 'Gestao de chamados',
-            'category' => 'Operacional',
-            'active' => true,
-        ]);
+        foreach ($moduleKeys as $moduleKey) {
+            $module = Module::query()->create([
+                'key' => $moduleKey,
+                'name' => ucfirst(str_replace('_', ' ', $moduleKey)),
+                'description' => "Modulo {$moduleKey}",
+                'category' => 'Operacional',
+                'active' => true,
+            ]);
 
-        $license->modules()->attach($module->id, ['enabled' => true]);
+            $license->modules()->attach($module->id, ['enabled' => true]);
+        }
 
         return [$user, $company];
     }
