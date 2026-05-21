@@ -1,29 +1,67 @@
-# SindiÂncora — Starter SaaS Condominial
+# SindiAncora
 
-Starter inicial para um SaaS multiempresa/multicondomínio com **Laravel + PostgreSQL + Redis + React/Inertia**.
+SindiAncora e uma plataforma SaaS multiempresa para gestao condominial, com licenciamento contratual personalizado por cliente.
 
-## O que já vem neste pontapé inicial
+O projeto usa Laravel no backend, PostgreSQL como banco principal, Redis para fila/cache/sessao quando habilitado, e React + Inertia no painel web.
 
-- Base Laravel/Inertia/React.
-- Autenticação web.
-- Layout limpo, moderno, responsivo, com cards, curvas, traços finos e navegação lateral.
-- Estrutura SaaS multiempresa.
-- Licenciamento contratual personalizado, sem planos fixos.
-- Módulos liberáveis por licença.
-- `LicenseGuard` para validar licença, módulos e limites.
-- Migrations iniciais.
-- Seed dos módulos.
-- Seed do Superadmin.
-- CRUD inicial de Empresas.
-- CRUD inicial de Licenças.
-- Listagem inicial de Módulos.
-- CRUD inicial/base de Condomínios, Fornecedores, Documentos e Chamados.
-- Documentação em `/docs`.
-- Guia de deploy no EasyPanel para `https://sindiancora.serratech.tec.br`.
+## Objetivo do projeto
 
-## Importante
+Construir um sistema proprio para operacao condominial, sem copia de identidade, layout, codigo ou textos de terceiros, com foco em:
 
-Este starter **não inclui `vendor/` nem `node_modules/`**. Depois de subir ao GitHub, rode no seu ambiente:
+- multiempresa com isolamento por `company_id`
+- licenciamento contratual flexivel
+- modulos habilitados por licenca
+- operacao de chamados, documentos, fornecedores e gestao futura de pagamentos, obras, manutencoes e app do condomino
+
+## Estado atual
+
+A base atual ja entrega:
+
+- autenticacao web
+- dashboard inicial
+- superadmin
+- CRUD inicial de empresas
+- CRUD inicial de licencas
+- catalogo de modulos
+- CRUD inicial de condominios
+- CRUD inicial de fornecedores
+- CRUD inicial de documentos
+- CRUD inicial de chamados
+- versionamento visivel apenas para superadmin
+- base de tenant com `currentCompany`, `BelongsToCompany` e `CompanyScope`
+- `LicenseGuard` e middlewares iniciais de licenca e modulo
+
+## Stack
+
+- PHP 8.3
+- Laravel 12
+- PostgreSQL
+- Redis
+- React 18
+- Inertia.js 2
+- TailwindCSS 3
+- Vite
+- Docker / EasyPanel
+
+## Instalacao local
+
+### 1. Dependencias
+
+Voce precisa de:
+
+- PHP 8.3+
+- Composer 2
+- Node.js 18+
+- PostgreSQL 16+
+- Redis 7+
+
+Se preferir, pode usar Docker apenas para PostgreSQL e Redis:
+
+```bash
+docker compose up -d postgres redis
+```
+
+### 2. Preparar ambiente
 
 ```bash
 cp .env.example .env
@@ -31,31 +69,117 @@ composer install
 npm install
 php artisan key:generate
 php artisan migrate --seed
-npm run dev
+```
+
+### 3. Rodar em desenvolvimento
+
+Terminal 1:
+
+```bash
 php artisan serve
 ```
 
-## Usuário inicial
+Terminal 2:
 
-O seed usa:
+```bash
+npm run dev
+```
+
+## Comandos principais
+
+```bash
+php artisan migrate --seed
+php artisan migrate:fresh --seed
+php artisan optimize:clear
+php artisan optimize
+npm run dev
+npm run build
+```
+
+## Estrutura de pastas
+
+```txt
+app/
+  Http/
+  Models/
+  Providers/
+  Services/
+bootstrap/
+config/
+database/
+docs/
+public/
+resources/
+  css/
+  js/
+    Components/
+    Layouts/
+    Pages/
+routes/
+tests/
+```
+
+## Variaveis de ambiente principais
 
 ```env
+APP_NAME="SindiAncora"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+APP_VERSION=0.1.0
+APP_RELEASE_NAME=Foundation
+APP_RELEASE_STAGE=foundation
+APP_RELEASED_AT=2026-05-21
+APP_BUILD_SHA=
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=sindiancora
+DB_USERNAME=sindiancora
+DB_PASSWORD=sindiancora
+
+SESSION_DRIVER=redis
+CACHE_STORE=redis
+QUEUE_CONNECTION=redis
+
+REDIS_CLIENT=phpredis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_PASSWORD=null
+
 SUPERADMIN_NAME="Junior Amorim"
 SUPERADMIN_EMAIL="admin@sindiancora.local"
 SUPERADMIN_PASSWORD="password"
 ```
 
-Altere antes de colocar em produção.
+## Deploy
 
-## Docker local opcional
+O deploy de producao e feito no EasyPanel com App Service + PostgreSQL e, depois da estabilizacao da base, Redis, worker e scheduler.
 
-```bash
-docker compose up -d postgres redis
-```
+Guia detalhado:
 
-## Próximo passo recomendado
+- [docs/DEPLOY_EASYPANEL.md](docs/DEPLOY_EASYPANEL.md)
 
-1. Subir este ZIP no GitHub.
-2. Criar o GitHub Project com milestones por fase.
-3. Pedir ao Codex para iniciar pela Fase 1 refinando setup, testes e autenticação.
-4. Não pular para módulos avançados antes de estabilizar multiempresa/licença.
+## Documentacao
+
+- [docs/README_PROJETO.md](docs/README_PROJETO.md)
+- [docs/ARQUITETURA.md](docs/ARQUITETURA.md)
+- [docs/BANCO_DE_DADOS.md](docs/BANCO_DE_DADOS.md)
+- [docs/LICENCIAMENTO.md](docs/LICENCIAMENTO.md)
+- [docs/MODULOS.md](docs/MODULOS.md)
+- [docs/PERMISSOES.md](docs/PERMISSOES.md)
+- [docs/ROADMAP.md](docs/ROADMAP.md)
+- [docs/CHECKLIST_TESTES.md](docs/CHECKLIST_TESTES.md)
+
+## Proximo passo recomendado
+
+Nao pular para modulos avancados antes de estabilizar:
+
+1. documentacao e padroes da Fase 0
+2. testes base
+3. tenancy
+4. licenciamento
+5. permissoes

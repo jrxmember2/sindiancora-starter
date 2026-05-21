@@ -7,6 +7,7 @@ import {
   FileText,
   Gauge,
   Home,
+  History,
   LogOut,
   Settings,
   ShieldCheck,
@@ -28,6 +29,7 @@ const superNav = [
   { label: 'Empresas', href: '/superadmin/companies', icon: Home },
   { label: 'Licencas', href: '/superadmin/licenses', icon: ShieldCheck },
   { label: 'Modulos', href: '/superadmin/modules', icon: Settings },
+  { label: 'Versoes', href: '/superadmin/versions', icon: History },
 ];
 
 export default function AppLayout({ title, children }) {

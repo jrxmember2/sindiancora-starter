@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperAdmin\CompanyController;
 use App\Http\Controllers\SuperAdmin\LicenseController;
 use App\Http\Controllers\SuperAdmin\ModuleController;
+use App\Http\Controllers\SuperAdmin\VersionController;
 use App\Http\Controllers\Tenant\CondominiumController;
 use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\IssueController;
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('companies', CompanyController::class)->except(['show']);
         Route::resource('licenses', LicenseController::class)->except(['show']);
         Route::resource('modules', ModuleController::class)->only(['index']);
+        Route::get('versions', VersionController::class)->name('versions.index');
     });
 
     Route::prefix('app')->middleware(['company.selected', 'license.active'])->group(function () {
