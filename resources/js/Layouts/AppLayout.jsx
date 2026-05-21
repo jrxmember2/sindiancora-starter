@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import {
   Building2,
@@ -6,14 +6,17 @@ import {
   ChevronDown,
   FileText,
   Gauge,
-  Home,
   History,
+  Home,
   LogOut,
+  Menu,
   Settings,
   ShieldCheck,
   TicketCheck,
   Wrench,
 } from 'lucide-react';
+import Drawer from '@/Components/Drawer';
+import ToastRegion from '@/Components/ToastRegion';
 import { cn } from '@/lib/utils';
 
 const nav = [
@@ -38,6 +41,42 @@ export default function AppLayout({ title, children }) {
   const { url } = page;
   const isSuperadmin = auth?.user?.is_superadmin;
   const items = isSuperadmin ? [...nav, ...superNav] : nav;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const lastFlashRef = useRef('');
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [url]);
+
+  useEffect(() => {
+    const success = flash?.success || '';
+    const error = flash?.error || '';
+    const signature = `${success}|${error}`;
+
+    if (!success && !error) {
+      return;
+    }
+
+    if (lastFlashRef.current === signature) {
+      return;
+    }
+
+    lastFlashRef.current = signature;
+
+    const next = [
+      success && { id: `success-${Date.now()}`, tone: 'success', title: 'Tudo certo', message: success },
+      error && { id: `error-${Date.now() + 1}`, tone: 'error', title: 'Algo precisa de atencao', message: error },
+    ].filter(Boolean);
+
+    setToasts((current) => [...current, ...next]);
+
+    next.forEach((toast) => {
+      window.setTimeout(() => {
+        setToasts((current) => current.filter((item) => item.id !== toast.id));
+      }, 4200);
+    });
+  }, [flash?.error, flash?.success]);
 
   const switchCompany = (event) => {
     const companyId = event.target.value;
@@ -47,55 +86,74 @@ export default function AppLayout({ title, children }) {
     }
   };
 
+  const logout = () => {
+    router.post('/logout');
+  };
+
+  const dismissToast = (id) => {
+    setToasts((current) => current.filter((toast) => toast.id !== id));
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-slate-200/80 bg-white/85 backdrop-blur-xl lg:block">
-        <div className="flex h-20 items-center gap-3 px-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-2 shadow-soft ring-1 ring-slate-200/80">
-            <img src="/branding/app-logo.png" alt="Logo SindiAncora" className="h-full w-full object-contain" />
-          </div>
+      <ToastRegion toasts={toasts} onDismiss={dismissToast} />
 
-          <div>
-            <p className="text-lg font-extrabold tracking-tight text-slate-950">SindiAncora</p>
-            <p className="text-xs font-medium text-slate-500">SaaS condominial</p>
-          </div>
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-slate-200/80 bg-white/85 backdrop-blur-xl lg:block">
+        <SidebarHeader />
+        <SidebarNav items={items} url={url} />
+      </aside>
+
+      <Drawer
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        title="Menu principal"
+        description="Navegue entre os modulos liberados do painel."
+      >
+        <SidebarHeader compact />
+        <div className="mt-5">
+          <SidebarNav items={items} url={url} mobile />
         </div>
 
-        <nav className="space-y-1 px-4">
-          {items.map((item) => {
-            const Icon = item.icon;
-            const active = item.href !== '#' && url?.startsWith(item.href);
-
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={cn(
-                  'group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition',
-                  active ? 'bg-slate-950 text-white shadow-soft' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
-                )}
+        {tenant?.companies?.length > 0 && (
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Empresa ativa</p>
+            <label className="relative mt-3 block">
+              <select
+                onChange={switchCompany}
+                defaultValue={tenant?.currentCompany?.id || ''}
+                className="h-11 w-full rounded-2xl border-slate-200 bg-white pl-4 pr-10 text-sm font-semibold text-slate-700 shadow-sm focus:border-blue-500 focus:ring-blue-500/20"
               >
-                <Icon className="h-4 w-4" />
-                <span className="flex-1">{item.label}</span>
-                {item.locked && (
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-500">
-                    em breve
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+                <option value="">Selecionar empresa</option>
+                {tenant.companies.map((company) => (
+                  <option key={company.id} value={company.id}>
+                    {company.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-3.5 h-4 w-4 text-slate-400" />
+            </label>
+          </div>
+        )}
+      </Drawer>
 
       <div className="lg:pl-72">
         <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-          <div className="flex h-20 items-center justify-between gap-4 px-5 lg:px-8">
-            <div>
-              <p className="text-sm font-medium text-slate-500">
-                {tenant?.currentCompany?.name || 'Ambiente geral'}
-              </p>
-              <h1 className="text-xl font-black tracking-tight text-slate-950">{title}</h1>
+          <div className="flex min-h-20 items-center justify-between gap-4 px-5 py-4 lg:px-8">
+            <div className="flex items-start gap-3">
+              <button
+                type="button"
+                onClick={() => setMenuOpen(true)}
+                className="rounded-2xl border border-slate-200 bg-white p-2.5 text-slate-600 shadow-sm transition hover:text-slate-950 lg:hidden"
+              >
+                <Menu className="h-4 w-4" />
+              </button>
+
+              <div>
+                <p className="text-sm font-medium text-slate-500">
+                  {tenant?.currentCompany?.name || 'Ambiente geral'}
+                </p>
+                <h1 className="text-xl font-black tracking-tight text-slate-950">{title}</h1>
+              </div>
             </div>
 
             <div className="flex items-center gap-3">
@@ -124,12 +182,13 @@ export default function AppLayout({ title, children }) {
 
                 <div className="leading-tight">
                   <p className="text-sm font-bold text-slate-900">{auth?.user?.name}</p>
-                  <p className="text-xs text-slate-500">{isSuperadmin ? 'Superadmin' : 'Usuario'}</p>
+                  <p className="text-xs text-slate-500">{isSuperadmin ? 'Superadmin' : 'Usuario interno'}</p>
                 </div>
               </div>
 
               <button
-                onClick={() => router.post('/logout')}
+                type="button"
+                onClick={logout}
                 className="rounded-2xl border border-slate-200 bg-white p-2.5 text-slate-500 shadow-sm transition hover:text-rose-600"
               >
                 <LogOut className="h-4 w-4" />
@@ -138,22 +197,56 @@ export default function AppLayout({ title, children }) {
           </div>
         </header>
 
-        <main className="px-5 py-8 lg:px-8">
-          {flash?.success && (
-            <div className="mb-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-              {flash.success}
-            </div>
-          )}
-
-          {flash?.error && (
-            <div className="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
-              {flash.error}
-            </div>
-          )}
-
-          {children}
-        </main>
+        <main className="px-5 py-8 lg:px-8">{children}</main>
       </div>
     </div>
+  );
+}
+
+function SidebarHeader({ compact = false }) {
+  return (
+    <div className={cn('flex items-center gap-3 px-6', compact ? 'h-auto px-0' : 'h-20')}>
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-2 shadow-soft ring-1 ring-slate-200/80">
+        <img src="/branding/app-logo.png" alt="Logo SindiAncora" className="h-full w-full object-contain" />
+      </div>
+
+      <div>
+        <p className="text-lg font-extrabold tracking-tight text-slate-950">SindiAncora</p>
+        <p className="text-xs font-medium text-slate-500">SaaS condominial</p>
+      </div>
+    </div>
+  );
+}
+
+function SidebarNav({ items, url, mobile = false }) {
+  return (
+    <nav className={cn('space-y-1', mobile ? 'px-0' : 'px-4')}>
+      {items.map((item) => {
+        const Icon = item.icon;
+        const active = item.href !== '#' && url?.startsWith(item.href);
+        const classes = cn(
+          'group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition',
+          active ? 'bg-slate-950 text-white shadow-soft' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950',
+          item.locked && 'cursor-not-allowed opacity-70'
+        );
+
+        if (item.locked || item.href === '#') {
+          return (
+            <div key={item.label} className={classes}>
+              <Icon className="h-4 w-4" />
+              <span className="flex-1">{item.label}</span>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-500">em breve</span>
+            </div>
+          );
+        }
+
+        return (
+          <Link key={item.label} href={item.href} className={classes}>
+            <Icon className="h-4 w-4" />
+            <span className="flex-1">{item.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

@@ -3,7 +3,7 @@
 ## Status geral
 
 - Fase 0: concluida no codigo
-- Fase 1: parcial
+- Fase 1: concluida no codigo
 - Fase 2: parcial
 - Fase 3: parcial
 - Fase 4 em diante: nao iniciadas
@@ -53,12 +53,21 @@ Consolidar a fundacao do painel web.
 
 ### Backlog executavel
 
-- [ ] completar componentes base faltantes
-- [ ] revisar dashboard inicial
-- [ ] padronizar formularios
-- [ ] mover validacoes de controller para `Form Requests`
-- [ ] adicionar toasts/notificacoes visuais
-- [ ] revisar responsividade
+- [x] completar componentes base faltantes
+- [x] revisar dashboard inicial
+- [x] padronizar formularios
+- [x] mover validacoes de controller para `Form Requests`
+- [x] adicionar toasts/notificacoes visuais
+- [x] revisar responsividade
+
+### Criterios de aceite
+
+- login funcional
+- dashboard carregando
+- navegacao responsiva
+- formularios principais padronizados
+- build frontend validado
+- testes basicos PHP passando
 
 ## Fase 2 - Multiempresa forte
 

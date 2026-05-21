@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SuperAdmin\LicenseRequest;
 use App\Models\Company;
 use App\Models\License;
 use App\Models\Module;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -30,12 +30,13 @@ class LicenseController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(LicenseRequest $request): RedirectResponse
     {
-        $license = License::create($this->validated($request));
-        $this->syncModules($license, $request->input('modules', []));
+        $validated = $request->validated();
+        $license = License::create($validated);
+        $this->syncModules($license, $validated['modules'] ?? []);
 
-        return redirect()->route('superadmin.licenses.index')->with('success', 'Licença criada.');
+        return redirect()->route('superadmin.licenses.index')->with('success', 'Licenca criada.');
     }
 
     public function edit(License $license): Response
@@ -50,46 +51,20 @@ class LicenseController extends Controller
         ]);
     }
 
-    public function update(Request $request, License $license): RedirectResponse
+    public function update(LicenseRequest $request, License $license): RedirectResponse
     {
-        $license->update($this->validated($request));
-        $this->syncModules($license, $request->input('modules', []));
+        $validated = $request->validated();
+        $license->update($validated);
+        $this->syncModules($license, $validated['modules'] ?? []);
 
-        return redirect()->route('superadmin.licenses.index')->with('success', 'Licença atualizada.');
+        return redirect()->route('superadmin.licenses.index')->with('success', 'Licenca atualizada.');
     }
 
     public function destroy(License $license): RedirectResponse
     {
         $license->update(['status' => 'canceled']);
 
-        return back()->with('success', 'Licença cancelada.');
-    }
-
-    private function validated(Request $request): array
-    {
-        return $request->validate([
-            'company_id' => ['required', 'exists:companies,id'],
-            'contract_number' => ['required', 'string', 'max:80'],
-            'status' => ['required', 'in:trial,active,pending,expired,suspended,canceled,blocked,read_only'],
-            'financial_status' => ['required', 'in:current,due,overdue,negotiated,suspended,canceled'],
-            'billing_type' => ['required', 'in:monthly,quarterly,yearly,custom'],
-            'monthly_amount' => ['nullable', 'numeric', 'min:0'],
-            'setup_amount' => ['nullable', 'numeric', 'min:0'],
-            'billing_day' => ['nullable', 'integer', 'min:1', 'max:31'],
-            'starts_at' => ['nullable', 'date'],
-            'ends_at' => ['nullable', 'date'],
-            'renews_at' => ['nullable', 'date'],
-            'max_condominiums' => ['required', 'integer', 'min:0'],
-            'max_internal_users' => ['required', 'integer', 'min:0'],
-            'max_storage_mb' => ['required', 'integer', 'min:0'],
-            'max_whatsapp_instances' => ['required', 'integer', 'min:0'],
-            'monthly_ai_credits' => ['required', 'integer', 'min:0'],
-            'allow_overage' => ['boolean'],
-            'block_new_records_on_limit' => ['boolean'],
-            'read_only_when_expired' => ['boolean'],
-            'auto_suspend_when_overdue' => ['boolean'],
-            'notes' => ['nullable', 'string'],
-        ]);
+        return back()->with('success', 'Licenca cancelada.');
     }
 
     private function syncModules(License $license, array $moduleIds): void

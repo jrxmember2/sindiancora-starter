@@ -39,7 +39,8 @@ class LoginTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('SuperAdmin/Versions/Index')
-                ->where('currentVersion.number', '0.1.0')
+                ->where('currentVersion.number', '0.2.0')
+                ->where('currentVersion.name', 'Web Foundation')
                 ->where('currentVersion.visibility', 'superadmin'));
     }
 

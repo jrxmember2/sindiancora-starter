@@ -4,7 +4,7 @@
 
 SindiAncora e um SaaS multiempresa para gestao condominial com foco em operacao, controle contratual e evolucao segura por fases.
 
-Este documento marca a formalizacao da Fase 0, organizando:
+Este documento registra a base formalizada do projeto apos as Fases 0 e 1, organizando:
 
 - arquitetura proposta
 - padroes de implementacao
@@ -23,14 +23,14 @@ Este documento marca a formalizacao da Fase 0, organizando:
 
 ## Versao atual da base
 
-- versao: `0.1.0`
-- release: `Foundation`
-- status: base publicada com login funcional, branding inicial e modulos basicos
+- versao: `0.2.0`
+- release: `Web Foundation`
+- status: base publicada com login funcional, dashboard revisado, componentes padronizados e formularios endurecidos
 
 ## O que esta implementado
 
 - autenticacao web com superadmin
-- dashboard inicial
+- dashboard inicial revisado
 - CRUD inicial de empresas
 - CRUD inicial de licencas
 - catalogo de modulos
@@ -41,12 +41,12 @@ Este documento marca a formalizacao da Fase 0, organizando:
 - alternancia de empresa na sessao
 - middlewares iniciais de licenca e modulo
 - tela de versionamento exclusiva do superadmin
+- Form Requests nos fluxos principais
+- componentes base do painel para tabela, drawer, modal, confirmacao e toast
 
 ## O que ainda nao esta endurecido
 
-- testes automatizados
 - policies e gates
-- form requests
 - historico de licenca em banco
 - uso de licenca em banco
 - uploads reais de documentos

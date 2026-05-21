@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\IssueRequest;
 use App\Models\Condominium;
 use App\Models\Issue;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,9 +27,9 @@ class IssueController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(IssueRequest $request): RedirectResponse
     {
-        Issue::create($this->validated($request) + [
+        Issue::create($request->validated() + [
             'origin' => 'interno',
             'opened_at' => now(),
             'created_by' => $request->user()->id,
@@ -46,9 +46,9 @@ class IssueController extends Controller
         ]);
     }
 
-    public function update(Request $request, Issue $issue): RedirectResponse
+    public function update(IssueRequest $request, Issue $issue): RedirectResponse
     {
-        $issue->update($this->validated($request) + ['updated_by' => $request->user()->id]);
+        $issue->update($request->validated() + ['updated_by' => $request->user()->id]);
 
         return redirect()->route('issues.index')->with('success', 'Chamado atualizado.');
     }
@@ -58,18 +58,5 @@ class IssueController extends Controller
         $issue->update(['status' => 'cancelado']);
 
         return back()->with('success', 'Chamado cancelado.');
-    }
-
-    private function validated(Request $request): array
-    {
-        return $request->validate([
-            'condominium_id' => ['required', 'exists:condominiums,id'],
-            'subject' => ['required', 'string', 'max:180'],
-            'description' => ['required', 'string'],
-            'status' => ['required', 'in:pendente,em_andamento,aguardando_assembleia,finalizado,cancelado'],
-            'priority' => ['required', 'in:baixa,media,alta,urgente'],
-            'deadline_at' => ['nullable', 'date'],
-            'shared_with_residents' => ['boolean'],
-        ]);
     }
 }

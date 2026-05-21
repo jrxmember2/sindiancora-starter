@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompanySwitchRequest;
 use App\Models\Company;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class CompanySwitchController extends Controller
 {
-    public function __invoke(Request $request): RedirectResponse
+    public function __invoke(CompanySwitchRequest $request): RedirectResponse
     {
-        $data = $request->validate(['company_id' => ['required', 'integer']]);
+        $data = $request->validated();
         $user = $request->user();
 
         $allowed = $user->isSuperAdmin()

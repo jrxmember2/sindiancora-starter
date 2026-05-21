@@ -18,7 +18,7 @@ Construir um sistema proprio para operacao condominial, sem copia de identidade,
 A base atual ja entrega:
 
 - autenticacao web
-- dashboard inicial
+- dashboard inicial revisado
 - superadmin
 - CRUD inicial de empresas
 - CRUD inicial de licencas
@@ -30,6 +30,8 @@ A base atual ja entrega:
 - versionamento visivel apenas para superadmin
 - base de tenant com `currentCompany`, `BelongsToCompany` e `CompanyScope`
 - `LicenseGuard` e middlewares iniciais de licenca e modulo
+- `Form Requests` nos fluxos principais
+- componentes base do painel para tabela, drawer, modal, confirmacao e toast
 
 ## Stack
 
@@ -128,9 +130,9 @@ APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
-APP_VERSION=0.1.0
-APP_RELEASE_NAME=Foundation
-APP_RELEASE_STAGE=foundation
+APP_VERSION=0.2.0
+APP_RELEASE_NAME=Web Foundation
+APP_RELEASE_STAGE=production
 APP_RELEASED_AT=2026-05-21
 APP_BUILD_SHA=
 
