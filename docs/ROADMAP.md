@@ -2,7 +2,7 @@
 
 ## Status geral
 
-- Fase 0: em formalizacao
+- Fase 0: concluida no codigo
 - Fase 1: parcial
 - Fase 2: parcial
 - Fase 3: parcial
@@ -33,10 +33,10 @@ Endurecer a base do projeto antes da expansao funcional.
 - [x] aplicar branding inicial
 - [x] criar versionamento visivel apenas para superadmin
 - [x] formalizar documentacao base
-- [ ] criar testes minimos de autenticacao
-- [ ] criar testes minimos de tenancy
-- [ ] revisar scheduler e fila para producao
-- [ ] padronizar textos sem ruido de encoding legado
+- [x] criar testes minimos de autenticacao
+- [x] criar testes minimos de tenancy
+- [x] revisar scheduler e fila para producao
+- [x] padronizar textos sem ruido de encoding legado
 
 ### Criterios de aceite
 
