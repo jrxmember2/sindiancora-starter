@@ -67,7 +67,7 @@ return new class extends Migration {
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('condominium_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('condominium_id')->constrained('condominiums')->cascadeOnDelete();
             $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('supplier_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('responsible_user_id')->nullable()->references('id')->on('users')->nullOnDelete();
@@ -101,7 +101,7 @@ return new class extends Migration {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('condominium_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('condominium_id')->nullable()->constrained('condominiums')->nullOnDelete();
             $table->string('title');
             $table->string('document_type')->nullable()->index();
             $table->decimal('amount', 12, 2)->nullable();
