@@ -9,6 +9,8 @@ Use os prompts abaixo como ponto de partida no seu controle de projeto. Eles ass
 - Fase 2 concluída
 - Fase 3 concluída
 - Fase 4 concluída
+- Fase 5 concluída
+- Fase 5.1 concluída
 - stack atual: Laravel + PostgreSQL + React + Inertia + Tailwind + EasyPanel
 
 Em qualquer fase, mantenha estas regras:
@@ -16,35 +18,13 @@ Em qualquer fase, mantenha estas regras:
 - não remover migrations antigas
 - não quebrar rotas existentes sem ajustar o frontend
 - não vazar dados entre empresas
-- validar `company_id`, licença, módulo e permissão
+- validar empresa ativa, licença, módulo, permissão e vínculo com condomínio
 - ao final, rodar testes, build e atualizar docs
-
-## Fase 5 - Condomínios
-
-```text
-Continue o projeto SindiAncora a partir da Fase 4 concluída.
-
-Objetivo da Fase 5:
-Completar o módulo de condomínios com dados cadastrais, status, logo e regras de limite por licença.
-
-Entregas esperadas:
-- completar CRUD de condomínios
-- upload de logo
-- filtros e listagem melhores
-- limite de condomínios ativos
-- inativação sem perda de dados
-- logs das alterações principais
-
-Regras:
-- inativo não conta no limite
-- sempre validar company_id e acesso do usuário
-- não quebrar a base criada na Fase 2
-```
 
 ## Fase 6 - Categorias e fornecedores
 
 ```text
-Continue o projeto SindiAncora a partir da Fase 5 concluída.
+Continue o projeto SindiAncora a partir da Fase 5.1 concluída.
 
 Objetivo da Fase 6:
 Criar os cadastros auxiliares que sustentam os módulos operacionais.
@@ -57,9 +37,10 @@ Entregas esperadas:
 - base pronta para uso em chamados, manutenções e pagamentos
 
 Regras:
-- usar form requests e policies
+- usar Form Requests e Policies
 - evitar duplicação entre categorias e fornecedores
-- atualizar docs dos módulos
+- manter acentuação correta na interface
+- atualizar documentação dos módulos
 ```
 
 ## Fase 7 - Chamados
@@ -76,7 +57,7 @@ Entregas esperadas:
 - responsável, fornecedor, categoria e prazo
 - filtros operacionais e indicadores
 - histórico básico do chamado
-- respeito total a company_id e condominium_id
+- respeito total ao vínculo ativo empresa-condomínio
 
 Regras:
 - não permitir vazamento entre empresas
@@ -97,7 +78,7 @@ Entregas esperadas:
 - visibilidade interna x pública
 - troca de status via acompanhamento
 - histórico de status e responsável
-- anexos do acompanhamento preparados
+- anexos preparados
 
 Regras:
 - acompanhamento interno não pode vazar para fluxo público futuro
@@ -121,7 +102,7 @@ Entregas esperadas:
 
 Regras:
 - validar tamanho e tipo de arquivo
-- respeitar company_id e escopo por condomínio
+- respeitar empresa ativa e vínculo com condomínio
 - não expor caminhos internos de storage
 ```
 
@@ -140,8 +121,8 @@ Entregas esperadas:
 - respeito a permissões e tenancy
 
 Regras:
-- não calcular indicadores fora do escopo da empresa ativa
-- otimizar queries e índices quando necessário
+- não calcular indicadores fora do escopo da empresa ativa e do vínculo com condomínio
+- otimizar queries quando necessário
 ```
 
 ## Fase 11 - Relatórios
@@ -196,12 +177,12 @@ Entregas esperadas:
 - CRUD de manutenções
 - recorrência
 - anexos
-- finalização
-- integração com cronograma e dashboard
+- relatório
+- presença no cronograma
 
 Regras:
-- recorrência precisa gerar próxima ocorrência de forma segura
-- manter company_id e condominium_id em todas as operações
+- manter vínculo com condomínio
+- preparar integração com fornecedores e categorias
 ```
 
 ## Fase 14 - Obras
@@ -210,14 +191,14 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 13 concluída.
 
 Objetivo da Fase 14:
-Criar o acompanhamento de obras e projetos maiores.
+Criar o módulo de obras.
 
 Entregas esperadas:
 - CRUD de obras
-- status, datas e custos
-- fornecedor e responsável
-- anexos e acompanhamentos
-- integração com dashboard e cronograma
+- status, orçamento e fornecedor
+- acompanhamentos
+- anexos
+- presença no dashboard e no cronograma
 ```
 
 ## Fase 15 - Pagamentos
@@ -226,18 +207,7 @@ Entregas esperadas:
 Continue o projeto SindiAncora a partir da Fase 14 concluída.
 
 Objetivo da Fase 15:
-Criar o controle de vencimentos, recorrências e parcelas.
-
-Entregas esperadas:
-- CRUD de pagamentos
-- tipos simples, recorrente e parcelado
-- vencimentos e lembretes
-- geração de parcelas/recorrências
-- notificações internas
-
-Regras:
-- base preparada para integração financeira futura
-- datas e valores precisam ficar consistentes
+Criar o módulo de pagamentos com recorrência, parcelas e lembretes.
 ```
 
 ## Fase 16 - Orçamentos
@@ -246,14 +216,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 15 concluída.
 
 Objetivo da Fase 16:
-Criar o módulo de orçamentos ligados a chamados, manutenções e obras.
-
-Entregas esperadas:
-- CRUD de orçamentos
-- origem do orçamento
-- anexos/propostas
-- aprovação e histórico
-- leitura de pendências no dashboard
+Criar o módulo de orçamentos vinculado a chamados, manutenções e obras.
 ```
 
 ## Fase 17 - Preferências da empresa
@@ -262,17 +225,7 @@ Entregas esperadas:
 Continue o projeto SindiAncora a partir da Fase 16 concluída.
 
 Objetivo da Fase 17:
-Criar configurações globais da empresa para operação, app futuro e WhatsApp.
-
-Entregas esperadas:
-- preferências operacionais
-- preferências do app do condômino
-- preferências de WhatsApp e horário
-- persistência em settings por empresa
-
-Regras:
-- usar chave/valor estruturado
-- documentar chaves novas em BANCO_DE_DADOS e MODULOS
+Criar preferências globais por empresa e preparar preferências futuras por condomínio.
 ```
 
 ## Fase 18 - Auditoria e logs
@@ -281,18 +234,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 17 concluída.
 
 Objetivo da Fase 18:
-Criar rastreabilidade de alterações críticas.
-
-Entregas esperadas:
-- audit log automático
-- usuário, empresa, IP e user-agent
-- old_values e new_values
-- tela de consulta para superadmin
-- tela limitada para empresa
-
-Regras:
-- não registrar senha ou dado sensível indevido
-- manter boa legibilidade para suporte e auditoria
+Completar a trilha de auditoria da plataforma e das empresas.
 ```
 
 ## Fase 19 - Notificações
@@ -301,17 +243,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 18 concluída.
 
 Objetivo da Fase 19:
-Criar a base de notificações internas e por e-mail.
-
-Entregas esperadas:
-- inbox interno
-- notificações por e-mail
-- preferências por usuário
-- eventos básicos de chamados, documentos e licença
-
-Regras:
-- usar Notifications do Laravel
-- respeitar preferência do usuário e escopo da empresa
+Criar inbox interno e notificações por e-mail com preferências por usuário.
 ```
 
 ## Fase 20 - WhatsApp
@@ -320,18 +252,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 19 concluída.
 
 Objetivo da Fase 20:
-Preparar a integração com WhatsApp após a base operacional estar estável.
-
-Entregas esperadas:
-- configuração de instâncias
-- status de conexão
-- horário de atendimento
-- histórico de mensagens
-- classificação de grupos e conversas
-
-Regras:
-- módulo precisa respeitar licença
-- limitar instâncias conforme contrato
+Preparar a integração com WhatsApp respeitando licença, horário e governança por empresa.
 ```
 
 ## Fase 21 - IA
@@ -340,19 +261,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 20 concluída.
 
 Objetivo da Fase 21:
-Adicionar recursos inteligentes de apoio operacional.
-
-Entregas esperadas:
-- correção de texto
-- resumo de chamado
-- sugestão de resposta
-- geração assistida de relatórios
-- controle de créditos por licença
-
-Regras:
-- contabilizar consumo por empresa
-- tratar dados sensíveis com cuidado
-- documentar estratégia antes de integrar provider externo
+Adicionar recursos de IA com controle de crédito e consumo por licença.
 ```
 
 ## Fase 22 - App do condômino
@@ -361,18 +270,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 21 concluída.
 
 Objetivo da Fase 22:
-Preparar backend, API e decisão técnica para o app mobile do condômino.
-
-Entregas esperadas:
-- comparação curta Flutter x Expo
-- recomendação técnica para este projeto
-- API segura no Laravel
-- autenticação apropriada
-- endpoints iniciais de chamados, documentos e avisos
-
-Regras:
-- app deve ser nativo, não webview
-- API deve respeitar tenancy, unidade e perfil do morador
+Preparar API e iniciar o app mobile do condômino.
 ```
 
 ## Fase 23 - Deploy EasyPanel
@@ -381,18 +279,7 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 22 concluída.
 
 Objetivo da Fase 23:
-Fechar o deploy de produção no EasyPanel com worker, scheduler, logs e backup.
-
-Entregas esperadas:
-- revisar repositório para deploy
-- PostgreSQL e Redis no projeto EasyPanel
-- worker e scheduler separados
-- storage link, cache e comandos pós-deploy
-- backup e checklist operacional
-
-Regras:
-- usar Nixpacks ou Docker de forma consistente
-- documentar passo a passo exato da restauração
+Endurecer o deploy final com worker, scheduler, logs e backup.
 ```
 
 ## Fase 24 - Testes, segurança e produção
@@ -401,17 +288,5 @@ Regras:
 Continue o projeto SindiAncora a partir da Fase 23 concluída.
 
 Objetivo da Fase 24:
-Endurecer o sistema para venda com foco em testes, segurança, performance e observabilidade.
-
-Entregas esperadas:
-- testes de autenticação, tenancy, licença, permissões e upload
-- revisão de segurança
-- índices e performance
-- monitoramento e logs de erro
-- checklist final de readiness
-
-Regras:
-- nenhuma funcionalidade deve vazar dados entre empresas
-- nenhum módulo bloqueado pode ser acessado via URL/API
-- deixar claro o que ainda é risco residual
+Fechar os testes críticos, revisão de segurança, performance e readiness comercial.
 ```

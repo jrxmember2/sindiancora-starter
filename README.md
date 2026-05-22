@@ -1,43 +1,47 @@
 # SindiAncora
 
-SindiAncora é uma plataforma SaaS multiempresa para gestão condominial, com licenciamento contratual personalizado por cliente.
-
-O projeto usa Laravel no backend, PostgreSQL como banco principal, Redis para fila/cache/sessão quando habilitado, e React + Inertia no painel web.
+SindiAncora é uma plataforma SaaS multiempresa para gestão condominial, com licenciamento contratual personalizado por cliente e governança preparada para operação compartilhada ou transferência de condomínios entre empresas.
 
 ## Objetivo do projeto
 
-Construir um sistema próprio para operação condominial, sem cópia de identidade, layout, código ou textos de terceiros, com foco em:
+Construir um sistema próprio para operação condominial, sem copiar identidade, layout, código ou textos de terceiros, com foco em:
 
-- multiempresa com isolamento por `company_id`
+- multiempresa com isolamento forte
 - licenciamento contratual flexível
 - módulos habilitados por licença
-- operação de chamados, documentos, fornecedores e gestão futura de pagamentos, obras, manutenções e app do condômino
+- governança de condomínio com empresa principal e empresa solidária
+- base preparada para chamados, documentos, fornecedores, manutenções, obras, pagamentos, IA e app do condômino
 
-## Estado atual
+## Estado atual da base
 
-A base atual já entrega:
+Release atual: `0.7.0 - Tenant Governance`
+
+O projeto já entrega:
 
 - autenticação web
-- dashboard inicial revisado
-- superadmin
-- CRUD inicial de empresas
-- CRUD inicial de licenças
+- superadmin da plataforma
+- usuários da plataforma separados dos usuários internos das empresas clientes
+- onboarding comercial com empresa, licença e admin master
+- troca obrigatória de senha no primeiro acesso
+- dashboard inicial
+- CRUD de empresas
+- CRUD de licenças
 - catálogo de módulos
-- CRUD inicial de condomínios
+- CRUD de condomínios com logo, filtros, indicadores e inativação sem perda de dados
 - CRUD inicial de fornecedores
 - CRUD inicial de documentos
 - CRUD inicial de chamados
 - versionamento visível apenas para superadmin
-- base de tenant com `currentCompany`, `BelongsToCompany` e `CompanyScope`
-- `LicenseGuard` e middlewares iniciais de licença e módulo
-- `Form Requests` nos fluxos principais
-- componentes base do painel para tabela, drawer, modal, confirmação e toast
-- endurecimento da troca de empresa e do route model binding tenant-aware
-- preparação de `user_condominiums` para escopo operacional por condomínio
-- histórico contratual de licenças em banco
-- snapshots de uso da licença por empresa
-- tela "Minha licença" com status, alertas, limites e módulos liberados
-- gestão de usuários internos com papéis, vínculo por condomínio, gates, policies e logs iniciais
+- tenancy com empresa ativa em sessão
+- escopo por condomínio para usuários internos
+- `LicenseGuard` com controle de uso e alertas
+- políticas e gates para usuários e condomínios
+- governança de condomínio com:
+  - registro canônico por documento
+  - vínculos `principal` e `solidaria`
+  - solicitação por duplicidade de CNPJ
+  - decisões `mesclar`, `transferir` e `recusar`
+  - override do superadmin com transferência forçada
 
 ## Stack
 
@@ -77,6 +81,7 @@ composer install
 npm install
 php artisan key:generate
 php artisan migrate --seed
+php artisan storage:link
 ```
 
 ### 3. Rodar em desenvolvimento
@@ -101,6 +106,7 @@ php artisan migrate:fresh --seed
 php artisan optimize:clear
 php artisan optimize
 php artisan test
+php artisan storage:link
 npm run dev
 npm run build
 ```
@@ -111,6 +117,7 @@ npm run build
 app/
   Http/
   Models/
+  Notifications/
   Policies/
   Providers/
   Services/
@@ -138,10 +145,10 @@ APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
-APP_VERSION=0.5.0
-APP_RELEASE_NAME="User Access Control"
+APP_VERSION=0.7.0
+APP_RELEASE_NAME="Tenant Governance"
 APP_RELEASE_STAGE=production
-APP_RELEASED_AT=2026-05-21
+APP_RELEASED_AT=2026-05-22
 APP_BUILD_SHA=
 
 DB_CONNECTION=pgsql
@@ -187,9 +194,4 @@ Guia detalhado:
 
 ## Próximo passo recomendado
 
-Com a Fase 4 concluída, a prioridade agora é:
-
-1. completar o módulo de condomínios
-2. revisar limites de ativos x inativos
-3. preparar upload de logo
-4. ampliar a matriz de autorização para os demais módulos
+Com a Fase 5.1 concluída, a prioridade agora é a **Fase 6: categorias e fornecedores**, seguida pela evolução do módulo de chamados.

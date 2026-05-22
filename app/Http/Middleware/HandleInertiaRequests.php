@@ -31,7 +31,13 @@ class HandleInertiaRequests extends Middleware
                     'name' => $user->name,
                     'email' => $user->email,
                     'is_superadmin' => (bool) $user->is_superadmin,
+                    'must_change_password' => (bool) $user->must_change_password,
                 ] : null,
+                'notifications' => $user ? [
+                    'unread_count' => $user->unreadNotifications()->count(),
+                ] : [
+                    'unread_count' => 0,
+                ],
             ],
             'tenant' => [
                 'currentCompany' => $company ? [
@@ -44,6 +50,7 @@ class HandleInertiaRequests extends Middleware
                     'id' => $membership->id,
                     'role' => $membership->role,
                     'status' => $membership->status,
+                    'is_primary' => (bool) $membership->is_primary,
                     'can_access_whatsapp' => (bool) $membership->can_access_whatsapp,
                     'only_responsible_issues' => (bool) $membership->only_responsible_issues,
                 ] : null,

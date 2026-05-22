@@ -17,8 +17,8 @@ class DashboardController extends Controller
         $company = app()->bound('currentCompany') ? app('currentCompany') : null;
         $user = auth()->user();
         $tenantResolver = app(TenantResolver::class);
-        $issuesQuery = $company ? $tenantResolver->scopeByAccessibleCondominiums(Issue::query(), $user, $company) : null;
-        $documentsQuery = $company ? $tenantResolver->scopeByAccessibleCondominiums(Document::query(), $user, $company, includeNull: true) : null;
+        $issuesQuery = $company ? $tenantResolver->scopeByAccessibleCondominiums(Issue::query()->withoutGlobalScopes(), $user, $company) : null;
+        $documentsQuery = $company ? $tenantResolver->scopeByAccessibleCondominiums(Document::query()->withoutGlobalScopes(), $user, $company, includeNull: true) : null;
 
         return Inertia::render('Dashboard', [
             'stats' => [

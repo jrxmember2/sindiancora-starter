@@ -11,12 +11,17 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'phone', 'password', 'avatar_url', 'status', 'is_superadmin'];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'avatar_url', 'status', 'is_superadmin', 'must_change_password'];
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'is_superadmin' => 'boolean'];
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_superadmin' => 'boolean',
+            'must_change_password' => 'boolean',
+        ];
     }
 
     public function companies()
@@ -42,5 +47,10 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return (bool) $this->is_superadmin;
+    }
+
+    public function requiresPasswordChange(): bool
+    {
+        return (bool) $this->must_change_password;
     }
 }

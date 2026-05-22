@@ -21,6 +21,12 @@ class CompanyUserManager
             $user = User::query()->where('email', $data['email'])->first();
 
             if ($user) {
+                if ($user->isSuperAdmin()) {
+                    throw ValidationException::withMessages([
+                        'email' => 'Este e-mail já pertence a um usuário da plataforma e não pode ser reutilizado como usuário interno do tenant.',
+                    ]);
+                }
+
                 $this->fillUserProfile($user, $data);
             } else {
                 $user = User::query()->create([
@@ -63,6 +69,7 @@ class CompanyUserManager
         return DB::transaction(function () use ($companyUser, $data, $actor) {
             $before = $this->snapshot($companyUser->loadMissing(['user', 'condominiums:id,name']));
 
+            $this->guardPrimaryAdminMembership($companyUser, $data['role'], $data['status']);
             $this->guardAgainstRemovingLastActiveAdmin($companyUser, $data['role'], $data['status']);
 
             if ($companyUser->user_id === $actor->id && ($data['status'] !== 'active')) {
@@ -107,6 +114,7 @@ class CompanyUserManager
         DB::transaction(function () use ($companyUser, $actor) {
             $before = $this->snapshot($companyUser->loadMissing(['user', 'condominiums:id,name']));
 
+            $this->guardPrimaryAdminMembership($companyUser, $companyUser->role, 'inactive');
             $this->guardAgainstRemovingLastActiveAdmin($companyUser, $companyUser->role, 'inactive');
 
             if ($companyUser->user_id === $actor->id) {
@@ -173,6 +181,21 @@ class CompanyUserManager
                 'role' => 'A empresa precisa manter pelo menos um admin ativo.',
             ]);
         }
+    }
+
+    protected function guardPrimaryAdminMembership(CompanyUser $companyUser, string $nextRole, string $nextStatus): void
+    {
+        if (! $companyUser->is_primary) {
+            return;
+        }
+
+        if ($nextRole === 'admin' && $nextStatus === 'active') {
+            return;
+        }
+
+        throw ValidationException::withMessages([
+            'role' => 'O admin master da empresa deve ser mantido pelo superadmin na área comercial da plataforma.',
+        ]);
     }
 
     protected function snapshot(CompanyUser $companyUser): array

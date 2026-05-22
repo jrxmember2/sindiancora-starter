@@ -29,8 +29,15 @@ class Company extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'company_users')
-            ->withPivot(['role', 'status', 'can_access_whatsapp', 'only_responsible_issues'])
+            ->withPivot(['role', 'status', 'can_access_whatsapp', 'only_responsible_issues', 'is_primary'])
             ->withTimestamps();
+    }
+
+    public function primaryCompanyUser()
+    {
+        return $this->hasOne(CompanyUser::class)
+            ->where('is_primary', true)
+            ->latestOfMany();
     }
 
     public function licenses()
@@ -53,8 +60,21 @@ class Company extends Model
         return $this->hasOne(LicenseUsage::class);
     }
 
-    public function condominiums()
+    public function ownedCondominiums()
     {
         return $this->hasMany(Condominium::class);
+    }
+
+    public function condominiumLinks()
+    {
+        return $this->hasMany(CompanyCondominium::class);
+    }
+
+    public function condominiums()
+    {
+        return $this->belongsToMany(Condominium::class, 'company_condominiums')
+            ->withPivot(['id', 'relationship_type', 'status', 'starts_at', 'ends_at', 'linked_by_user_id', 'approved_by_user_id', 'notes'])
+            ->withTimestamps()
+            ->wherePivot('status', 'active');
     }
 }

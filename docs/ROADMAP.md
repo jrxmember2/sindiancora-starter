@@ -7,270 +7,267 @@
 - Fase 2: concluída no código
 - Fase 3: concluída no código
 - Fase 4: concluída no código
-- Fase 5 em diante: não iniciadas
+- Fase 5: concluída no código
+- Fase 5.1: concluída no código
+- Fase 6 em diante: não iniciadas
 
 ## Fase 0 - Preparação, documentação e arquitetura
 
-### Objetivo
+Status: concluída
 
-Endurecer a base do projeto antes da expansão funcional.
+Entregas:
 
-### Entregas da fase
-
-- README raiz reescrito
-- `docs/README_PROJETO.md`
-- arquitetura formalizada
-- banco inicial documentado
-- licenciamento documentado
-- permissões documentadas
+- documentação base formalizada
+- arquitetura inicial registrada
 - deploy no EasyPanel documentado
-- backlog por fase organizado
-- checklist de testes inicial
-
-### Backlog executável
-
-- [x] revisar o estado real do projeto
-- [x] corrigir login em produção via proxy/https
-- [x] aplicar branding inicial
-- [x] criar versionamento visível apenas para superadmin
-- [x] formalizar documentação base
-- [x] criar testes mínimos de autenticação
-- [x] criar testes mínimos de tenancy
-- [x] revisar scheduler e fila para produção
-- [x] padronizar textos sem ruído de encoding legado
-
-### Critérios de aceite
-
-- login funcionando em produção
-- build frontend funcionando
-- docs base atualizadas
-- direção arquitetural definida
+- testes mínimos de autenticação e tenancy
+- scheduler revisado para produção
 
 ## Fase 1 - Base web e UX principal
 
-### Objetivo
+Status: concluída
 
-Consolidar a fundação do painel web.
+Entregas:
 
-### Backlog executável
-
-- [x] completar componentes base faltantes
-- [x] revisar dashboard inicial
-- [x] padronizar formulários
-- [x] mover validações de controller para `Form Requests`
-- [x] adicionar toasts/notificações visuais
-- [x] revisar responsividade
-
-### Critérios de aceite
-
-- login funcional
-- dashboard carregando
-- navegação responsiva
-- formulários principais padronizados
-- build frontend validado
-- testes básicos PHP passando
+- base Laravel + Inertia + React consolidada
+- componentes principais do painel
+- formulários padronizados
+- validações migradas para `Form Requests`
+- dashboard e layout autenticado revisados
 
 ## Fase 2 - Multiempresa forte
 
-### Objetivo
+Status: concluída
 
-Garantir isolamento seguro entre tenants.
-
-### Backlog executável
-
-- [x] endurecer troca de empresa
-- [x] criar testes de vazamento entre empresas
-- [x] revisar queries operacionais por `company_id`
-- [x] preparar `user_condominiums`
-
-### Critérios de aceite
+Entregas:
 
 - empresa ativa resolvida antes do route model binding
-- usuário comum não troca para empresa inativa, suspensa ou sem vínculo ativo
-- chamados e documentos respeitam `company_id` e, quando houver, escopo por condomínio
-- testes de tenancy cobrindo URL direta, troca de empresa e escopo por condomínio
+- troca de empresa endurecida
+- escopo operacional por condomínio preparado
+- testes de vazamento entre empresas
 
 ## Fase 3 - Licenciamento contratual
 
-### Objetivo
+Status: concluída
 
-Completar o coração comercial do SaaS.
+Entregas:
 
-### Backlog executável
-
-- [x] `license_history`
-- [x] `license_usage`
-- [x] completar `LicenseGuard`
-- [x] tela de uso da licença
-- [x] alertas de limite
-- [x] bloquear escrita em modo somente leitura
-- [x] testes de contrato e bloqueio de módulo
-
-### Critérios de aceite
-
-- superadmin cria e atualiza licenças com histórico registrado
-- uso da licença é sincronizado por empresa
-- empresa consegue visualizar contrato, módulos e limites em "Minha licença"
-- módulos bloqueados não podem ser acessados por URL direta
-- licença em modo somente leitura permite consulta e bloqueia escrita
+- `license_history`
+- `license_usage`
+- `LicenseGuard` expandido
+- tela `Minha licença`
+- bloqueio de módulo e modo somente leitura
 
 ## Fase 4 - Usuários e permissões
 
-### Objetivo
+Status: concluída
 
-Criar a gestão de usuários internos da empresa com papéis, permissões e escopo por condomínio.
+Entregas:
 
-### Backlog executável
-
-- [x] CRUD de usuários internos
-- [x] papéis por empresa com config central de abilities
-- [x] policies e gates para a área de usuários
-- [x] vínculo `user_condominiums` com tela de seleção
-- [x] validação de limite de usuários internos pela licença
-- [x] compartilhamento de abilities para o frontend
-- [x] limitação opcional de chamados para vínculos marcados como "somente atribuídos"
-- [x] logs iniciais de criação, edição e inativação em `audit_logs`
-
-### Critérios de aceite
-
-- admin da empresa cria usuários internos até o limite contratado
-- usuário sem permissão não acessa a gestão de usuários via menu, URL nem backend
-- vínculo sem condomínios marcados enxerga todos os condomínios ativos da empresa
-- vínculo com condomínios marcados só enxerga o escopo permitido
-- usuário operacional com flag de chamados atribuídos vê apenas a própria fila
-- suíte PHP cobre gestão de usuários, tenancy e restrições principais
+- CRUD de usuários internos
+- papéis por empresa
+- `Policies` e `Gates`
+- vínculo `user_condominiums`
+- limite de usuários por licença
 
 ## Fase 5 - Condomínios
 
-- [ ] completar cadastro
-- [ ] revisar limites ativos/inativos
-- [ ] preparar upload de logo
+Status: concluída
+
+Entregas:
+
+- cadastro revisado
+- upload e remoção de logo
+- filtros e indicadores
+- limite real de condomínios ativos
+- inativação sem perda de dados
+
+## Fase 5.1 - Revisão do tenancy e governança de condomínio
+
+Status: concluída
+
+Objetivo:
+
+Separar plataforma x empresa cliente e preparar condomínios compartilháveis ou transferíveis entre síndicas sem quebrar o isolamento jurídico e operacional.
+
+Entregas:
+
+- [x] separar conceitualmente usuários da plataforma e usuários das empresas clientes
+- [x] manter `users.is_superadmin` restrito à equipe da plataforma
+- [x] fazer onboarding comercial pelo superadmin com empresa, licença e usuário principal
+- [x] adicionar troca obrigatória de senha no primeiro acesso do admin master
+- [x] consolidar o papel de admin master da empresa sem transformá-lo em superadmin da plataforma
+- [x] evoluir condomínio para registro canônico por documento
+- [x] criar estrutura de vínculo empresa-condomínio com papéis `principal` e `solidaria`
+- [x] criar fluxo de conflito por documento duplicado com notificação e trilha auditável
+- [x] permitir decisões `transferir`, `mesclar` e `recusar`
+- [x] permitir override do superadmin com transferência forçada
+- [x] revisar scopes, guards, políticas e queries para respeitar vínculo ativo empresa-condomínio
+- [x] registrar a nova direção arquitetural na documentação
+
+Critérios de aceite atendidos:
+
+- superadmin mantém visão macro da plataforma
+- admin master da empresa cliente administra apenas a própria empresa
+- cadastro duplicado por documento não cria condomínio duplicado silenciosamente
+- cada condomínio pode ter empresa principal e empresas solidárias autorizadas
+- transferência, mescla e recusa geram notificação, histórico e auditoria
+- a base ficou preparada para troca de síndico sem misturar automaticamente dados privados da empresa anterior
 
 ## Fase 6 - Categorias e fornecedores
 
-- [ ] CRUD completo de categorias
-- [ ] endurecer fornecedor por tenant
-- [ ] filtros e exportação simples
+Status: próxima fase
+
+Objetivo:
+
+Criar os cadastros auxiliares que sustentam os módulos operacionais.
+
+Entregas planejadas:
+
+- CRUD completo de categorias por tipo
+- endurecimento do CRUD de fornecedores
+- filtros, busca e exportação simples
 
 ## Fase 7 - Chamados
 
-- [ ] detalhes completos
-- [ ] responsável e fornecedor
-- [ ] prazos e indicadores
-- [ ] anexos
+Status: planejada
+
+Objetivo:
+
+Completar o módulo principal de chamados, agora já respeitando o vínculo ativo empresa-condomínio.
 
 ## Fase 8 - Acompanhamentos
 
-- [ ] timeline do chamado
-- [ ] histórico de status
-- [ ] histórico de responsável
+Status: planejada
+
+Objetivo:
+
+Criar a timeline operacional do chamado com separação entre visibilidade interna e pública.
 
 ## Fase 9 - Documentos
 
-- [ ] upload real
-- [ ] download seguro
-- [ ] vencimentos e status
+Status: planejada
+
+Objetivo:
+
+Completar documentos com upload real, download seguro, vencimentos e regra de transferência entre gestões.
 
 ## Fase 10 - Dashboard e home operacional
 
-- indicadores por empresa e condomínio
-- cards clicáveis
-- leitura de uso e pendências
+Status: planejada
+
+Objetivo:
+
+Criar indicadores clicáveis por empresa e condomínio.
 
 ## Fase 11 - Relatórios
 
-- relatórios por período
-- base para PDF
-- controle de conteúdo público x interno
+Status: planejada
+
+Objetivo:
+
+Criar relatórios operacionais e base para PDF.
 
 ## Fase 12 - Cronograma
 
-- calendário mensal
-- itens por dia
-- navegação para o detalhe
+Status: planejada
+
+Objetivo:
+
+Criar a visão em calendário da operação.
 
 ## Fase 13 - Manutenções
 
-- preventivas e corretivas
-- recorrência
-- relatório
+Status: planejada
+
+Objetivo:
+
+Criar o módulo de manutenções preventivas e corretivas.
 
 ## Fase 14 - Obras
 
-- acompanhamento de obras
-- anexos
-- status e custos
+Status: planejada
+
+Objetivo:
+
+Criar o módulo de obras.
 
 ## Fase 15 - Pagamentos
 
-- vencimentos
-- recorrência
-- parcelas
-- notificações internas
+Status: planejada
+
+Objetivo:
+
+Criar o módulo de pagamentos com recorrência e parcelas.
 
 ## Fase 16 - Orçamentos
 
-- origem do orçamento
-- aprovação
-- histórico
+Status: planejada
+
+Objetivo:
+
+Criar o módulo de orçamentos vinculado à operação.
 
 ## Fase 17 - Preferências da empresa
 
-- parâmetros operacionais
-- configurações do app futuro
-- configurações de WhatsApp
+Status: planejada
+
+Objetivo:
+
+Criar parâmetros globais da empresa e preparar preferências futuras por condomínio.
 
 ## Fase 18 - Auditoria e logs
 
-- trilha de alterações
-- tela para superadmin
-- tela limitada para empresa
+Status: planejada
+
+Objetivo:
+
+Completar a trilha de auditoria da plataforma e das empresas.
 
 ## Fase 19 - Notificações
 
-- inbox interno
-- e-mail
-- preferências por usuário
+Status: planejada
+
+Objetivo:
+
+Criar inbox interno e notificações por e-mail.
 
 ## Fase 20 - WhatsApp
 
-- configuração de instância
-- horário de atendimento
-- histórico de conversa
+Status: planejada
+
+Objetivo:
+
+Preparar integração com WhatsApp respeitando licença e governança.
 
 ## Fase 21 - IA
 
-- correções de texto
-- sugestões e resumos
-- controle de crédito
+Status: planejada
+
+Objetivo:
+
+Adicionar recursos de IA com controle de crédito e consumo por licença.
 
 ## Fase 22 - App do condômino
 
-- API preparada
-- decisão Flutter x Expo antes da implementação
-- funcionalidades iniciais do app
+Status: planejada
+
+Objetivo:
+
+Preparar API e iniciar o app mobile do condômino.
 
 ## Fase 23 - Deploy EasyPanel
 
-- endurecimento final de deploy
-- worker, scheduler e backup
-- checklist operacional
+Status: planejada
+
+Objetivo:
+
+Endurecer o deploy final com worker, scheduler, logs e backup.
 
 ## Fase 24 - Testes, segurança e produção
 
-- testes críticos
-- revisão de performance
-- monitoramento
-- readiness para venda
+Status: planejada
 
-## Regras de execução
+Objetivo:
 
-Em cada fase:
-
-1. definir objetivo
-2. listar arquivos alterados
-3. implementar
-4. validar build e migrations
-5. revisar segurança e tenant
-6. atualizar documentação
-7. registrar a release
+Fechar os testes críticos, revisão de segurança, performance e readiness comercial.

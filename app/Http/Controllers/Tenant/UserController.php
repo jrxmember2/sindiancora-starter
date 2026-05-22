@@ -92,7 +92,7 @@ class UserController extends Controller
     protected function condominiumOptions(): array
     {
         return app('currentCompany')->condominiums()
-            ->where('status', 'active')
+            ->where('condominiums.status', 'active')
             ->orderBy('name')
             ->get(['id', 'name'])
             ->map(fn ($condominium) => [

@@ -57,7 +57,10 @@ class LicenseGuard
         return $this->canUseContractedResource(
             $company,
             'active_condominiums',
-            fn (Company $company) => $company->condominiums()->withoutGlobalScopes()->where('status', 'active')->count(),
+            fn (Company $company) => $company->condominiums()
+                ->where('condominiums.status', 'active')
+                ->distinct('condominiums.id')
+                ->count('condominiums.id'),
             'max_condominiums'
         );
     }
@@ -138,7 +141,10 @@ class LicenseGuard
         $usageSnapshot = $company?->licenseUsage()->first();
 
         $usedCondominiums = $company
-            ? $company->condominiums()->withoutGlobalScopes()->where('status', 'active')->count()
+            ? $company->condominiums()
+                ->where('condominiums.status', 'active')
+                ->distinct('condominiums.id')
+                ->count('condominiums.id')
             : 0;
 
         $usedInternalUsers = $company

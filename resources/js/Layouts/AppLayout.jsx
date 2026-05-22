@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import {
+  Bell,
   Building2,
   CalendarDays,
   ChevronDown,
   FileText,
   Gauge,
   History,
-  Home,
   LogOut,
   Menu,
   Settings,
@@ -20,20 +20,24 @@ import Drawer from '@/Components/Drawer';
 import ToastRegion from '@/Components/ToastRegion';
 import { cn } from '@/lib/utils';
 
-const nav = [
+const tenantNav = [
   { label: 'Dashboard', href: '/dashboard', icon: Gauge },
   { label: 'Minha licença', href: '/app/license', icon: ShieldCheck },
-  { label: 'Usuários', href: '/app/users', icon: Users, moduleKey: 'configuracoes', abilityKey: 'view_company_users' },
+  { label: 'Solicitações de condomínio', href: '/app/condominium-link-requests', icon: Bell, requiresPrimaryAdmin: true },
+  { label: 'Usuários internos', href: '/app/users', icon: Users, moduleKey: 'configuracoes', abilityKey: 'view_company_users' },
+  { label: 'Condomínios', href: '/app/condominiums', icon: Building2, moduleKey: 'configuracoes', abilityKey: 'view_condominiums' },
   { label: 'Chamados', href: '/app/issues', icon: TicketCheck, moduleKey: 'chamados' },
-  { label: 'Condomínios', href: '/app/condominiums', icon: Building2, moduleKey: 'configuracoes' },
   { label: 'Fornecedores', href: '/app/suppliers', icon: Wrench, moduleKey: 'fornecedores' },
   { label: 'Documentos', href: '/app/documents', icon: FileText, moduleKey: 'documentos' },
   { label: 'Cronograma', href: '/app/cronograma', icon: CalendarDays, moduleKey: 'cronograma', comingSoon: true },
 ];
 
 const superNav = [
-  { label: 'Empresas', href: '/superadmin/companies', icon: Home },
+  { label: 'Dashboard', href: '/dashboard', icon: Gauge },
+  { label: 'Empresas', href: '/superadmin/companies', icon: Building2 },
   { label: 'Licenças', href: '/superadmin/licenses', icon: ShieldCheck },
+  { label: 'Usuários da plataforma', href: '/superadmin/platform-users', icon: Users },
+  { label: 'Governança de condomínios', href: '/superadmin/condominium-governance', icon: Settings },
   { label: 'Módulos', href: '/superadmin/modules', icon: Settings },
   { label: 'Versões', href: '/superadmin/versions', icon: History },
 ];
@@ -45,14 +49,18 @@ export default function AppLayout({ title, children }) {
   const isSuperadmin = auth?.user?.is_superadmin;
   const moduleAccess = tenant?.moduleAccess || {};
   const abilities = tenant?.abilities || {};
+  const isPrimaryAdmin = Boolean(tenant?.currentMembership?.is_primary);
+  const unreadNotifications = auth?.notifications?.unread_count || 0;
   const items = isSuperadmin
-    ? [...nav, ...superNav]
-    : nav
+    ? superNav
+    : tenantNav
+        .filter((item) => !item.requiresPrimaryAdmin || isPrimaryAdmin)
         .filter((item) => !item.abilityKey || abilities[item.abilityKey])
         .map((item) => ({
           ...item,
           locked: item.moduleKey ? moduleAccess[item.moduleKey] === false : false,
         }));
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const lastFlashRef = useRef('');
@@ -119,7 +127,7 @@ export default function AppLayout({ title, children }) {
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         title="Menu principal"
-        description="Navegue entre os módulos liberados do painel."
+        description={isSuperadmin ? 'Acesse a visão macro da plataforma.' : 'Navegue entre os módulos liberados do painel.'}
       >
         <SidebarHeader compact />
         <div className="mt-5">
@@ -128,7 +136,9 @@ export default function AppLayout({ title, children }) {
 
         {tenant?.companies?.length > 0 && (
           <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Empresa ativa</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              {isSuperadmin ? 'Empresa em foco' : 'Empresa ativa'}
+            </p>
             <label className="relative mt-3 block">
               <select
                 onChange={switchCompany}
@@ -162,13 +172,23 @@ export default function AppLayout({ title, children }) {
 
               <div>
                 <p className="text-sm font-medium text-slate-500">
-                  {tenant?.currentCompany?.name || 'Ambiente geral'}
+                  {tenant?.currentCompany?.name || (isSuperadmin ? 'Visão da plataforma' : 'Ambiente geral')}
                 </p>
                 <h1 className="text-xl font-black tracking-tight text-slate-950">{title}</h1>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
+              {!isSuperadmin && isPrimaryAdmin && unreadNotifications > 0 && (
+                <Link
+                  href="/app/condominium-link-requests"
+                  className="hidden items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800 shadow-sm md:inline-flex"
+                >
+                  <Bell className="h-4 w-4" />
+                  {unreadNotifications} pendência{unreadNotifications > 1 ? 's' : ''}
+                </Link>
+              )}
+
               {tenant?.companies?.length > 0 && (
                 <label className="relative hidden md:block">
                   <select
@@ -194,7 +214,9 @@ export default function AppLayout({ title, children }) {
 
                 <div className="leading-tight">
                   <p className="text-sm font-bold text-slate-900">{auth?.user?.name}</p>
-                  <p className="text-xs text-slate-500">{isSuperadmin ? 'Superadmin' : 'Usuário interno'}</p>
+                  <p className="text-xs text-slate-500">
+                    {isSuperadmin ? 'Superadmin da plataforma' : isPrimaryAdmin ? 'Admin master da empresa' : 'Usuário interno'}
+                  </p>
                 </div>
               </div>
 

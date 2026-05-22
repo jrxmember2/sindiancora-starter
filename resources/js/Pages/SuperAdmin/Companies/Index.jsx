@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import AppLayout from '@/Layouts/AppLayout';
 import Badge from '@/Components/Badge';
@@ -30,26 +30,26 @@ export default function Index({ companies }) {
       <Card>
         <CardHeader
           title="Empresas clientes"
-          description="Controle os tenants que usam a plataforma e acompanhe a base comercial."
-          action={
+          description="Controle os tenants, faça o onboarding comercial e mantenha o admin master inicial separado dos usuários da plataforma."
+          action={(
             <Button href="/superadmin/companies/create">
               <Plus className="h-4 w-4" /> Nova empresa
             </Button>
-          }
+          )}
         />
 
         <DataTable
           columns={[
             { key: 'name', label: 'Empresa' },
-            { key: 'contact', label: 'Contato' },
-            { key: 'owner', label: 'Responsável' },
+            { key: 'contact', label: 'Contato da empresa' },
+            { key: 'primary_admin', label: 'Admin master' },
             { key: 'status', label: 'Status' },
-            { key: 'actions', label: 'Ações', align: 'right', className: 'w-40' },
+            { key: 'actions', label: 'Ações', align: 'right', className: 'w-48' },
           ]}
           rows={companies.data}
           meta={companies}
           emptyTitle="Nenhuma empresa cadastrada"
-          emptyDescription="Cadastre o primeiro tenant para iniciar o uso comercial da plataforma."
+          emptyDescription="Cadastre o primeiro cliente para iniciar o uso comercial da plataforma."
           renderRow={(company) => (
             <tr key={company.id} className="bg-white">
               <td className="px-4 py-4">
@@ -60,7 +60,10 @@ export default function Index({ companies }) {
                 <p>{company.email || 'Sem e-mail'}</p>
                 <p className="text-xs text-slate-400">{company.phone || 'Sem telefone'}</p>
               </td>
-              <td className="px-4 py-4 text-slate-600">{company.responsible_name || 'Não informado'}</td>
+              <td className="px-4 py-4 text-slate-600">
+                <p>{company.primary_company_user?.user?.name || 'Não configurado'}</p>
+                <p className="text-xs text-slate-400">{company.primary_company_user?.user?.email || 'Sem e-mail de acesso'}</p>
+              </td>
               <td className="px-4 py-4">
                 <Badge tone={company.status === 'active' ? 'green' : company.status === 'suspended' ? 'yellow' : 'gray'}>
                   {companyStatusLabel(company.status)}
@@ -70,6 +73,9 @@ export default function Index({ companies }) {
                 <div className="flex justify-end gap-2">
                   <Button href={`/superadmin/companies/${company.id}/edit`} variant="soft" size="sm">
                     Editar
+                  </Button>
+                  <Button href={`/superadmin/licenses/create?company_id=${company.id}`} variant="soft" size="sm">
+                    Licença
                   </Button>
                   {company.status !== 'inactive' && (
                     <Button type="button" variant="danger" size="sm" onClick={() => setSelectedCompany(company)}>

@@ -4,16 +4,7 @@
 
 SindiAncora é um SaaS multiempresa para gestão condominial com foco em operação, controle contratual e evolução segura por fases.
 
-Este documento registra a base formalizada do projeto após as Fases 0, 1, 2, 3 e 4, organizando:
-
-- arquitetura proposta
-- padrões de implementação
-- regras de multiempresa
-- estratégia de licenciamento
-- estratégia de permissão
-- modelo inicial de banco
-- deploy no EasyPanel
-- backlog executável das próximas fases
+Este documento registra a base formalizada do projeto após as Fases 0, 1, 2, 3, 4, 5 e 5.1.
 
 ## Ambiente de produção
 
@@ -23,46 +14,42 @@ Este documento registra a base formalizada do projeto após as Fases 0, 1, 2, 3 
 
 ## Versão atual da base
 
-- versão: `0.5.0`
-- release: `User Access Control`
-- status: base publicada com login funcional, tenancy endurecido, licenciamento contratual operacional e gestão inicial de usuários internos
+- versão: `0.7.0`
+- release: `Tenant Governance`
+- status: base publicada com separação entre usuários da plataforma e usuários internos das empresas, onboarding comercial completo, primeiro acesso obrigatório e governança de condomínio canônico por documento
 
 ## O que está implementado
 
-- autenticação web com superadmin
-- dashboard inicial revisado
-- CRUD inicial de empresas
-- CRUD inicial de licenças
-- catálogo de módulos
-- CRUD inicial de condomínios
-- CRUD inicial de fornecedores
-- CRUD inicial de documentos
-- CRUD inicial de chamados
-- alternância de empresa na sessão
-- middlewares iniciais de licença e módulo
-- tela de versionamento exclusiva do superadmin
-- `Form Requests` nos fluxos principais
-- componentes base do painel para tabela, drawer, modal, confirmação e toast
-- validação da empresa ativa antes do route model binding
-- troca de empresa limitada a vínculos ativos
-- preparação de `user_condominiums` e escopo por condomínio em chamados/documentos
-- histórico de licença em banco
-- uso de licença persistido por empresa
-- tela "Minha licença" para leitura operacional do contrato
-- alertas contratuais e status de somente leitura
-- gestão de usuários internos com papéis por empresa
-- policies e gates para a área de usuários
-- logs iniciais de criação, edição e inativação de usuários internos
+- superadmin da plataforma com visão macro
+- empresas clientes com admin master próprio
+- licenciamento contratual por empresa
+- módulos liberados por licença
+- troca obrigatória de senha no primeiro acesso
+- usuários internos com papéis por empresa
+- escopo por condomínio para usuários internos
+- condomínio canônico com:
+  - vínculo principal
+  - vínculo solidário
+  - solicitação por documento duplicado
+  - mescla, transferência e recusa
+  - intervenção do superadmin
+- chamados e documentos já preparados para respeitar vínculo ativo empresa-condomínio
 
-## O que ainda não está endurecido
+## O que ainda está pendente
 
-- uploads reais de documentos
-- worker/scheduler ativos em produção
-- auditoria transversal completa da plataforma
-- notificações
-- matriz granular de permissão para todos os módulos operacionais
+- CRUD de categorias
+- endurecimento final de fornecedores
+- upload real de documentos
+- acompanhamentos de chamados
+- relatórios e PDF
+- cronograma
+- manutenções, obras, pagamentos e orçamentos
+- notificações transversais
+- integração com WhatsApp
+- recursos de IA
+- app do condômino
 
-## Leitura recomendada
+## Leituras recomendadas
 
 1. [ARQUITETURA.md](ARQUITETURA.md)
 2. [BANCO_DE_DADOS.md](BANCO_DE_DADOS.md)

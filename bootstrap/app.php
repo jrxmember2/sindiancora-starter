@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureCompanySelected;
 use App\Http\Middleware\EnsureLicenseIsActive;
+use App\Http\Middleware\EnsurePasswordChangeIsComplete;
 use App\Http\Middleware\EnsureModuleIsEnabled;
 use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -40,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'company.selected' => EnsureCompanySelected::class,
             'license.active' => EnsureLicenseIsActive::class,
             'module' => EnsureModuleIsEnabled::class,
+            'password.changed' => EnsurePasswordChangeIsComplete::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -41,4 +41,43 @@ abstract class TenantFormRequest extends FormRequest
             })
             ->ignore($ignore);
     }
+
+    protected function existsInAccessibleCondominiums(string $column = 'id'): Exists
+    {
+        $companyId = $this->companyId();
+        $user = $this->user();
+
+        return Rule::exists('condominiums', $column)->where(function (Builder $query) use ($companyId, $user) {
+            if (! $companyId) {
+                return;
+            }
+
+            $query->whereExists(function (Builder $subQuery) use ($companyId) {
+                $subQuery
+                    ->selectRaw('1')
+                    ->from('company_condominiums')
+                    ->whereColumn('company_condominiums.condominium_id', 'condominiums.id')
+                    ->where('company_condominiums.company_id', $companyId)
+                    ->where('company_condominiums.status', 'active');
+            });
+
+            if (! $user || $user->isSuperAdmin()) {
+                return;
+            }
+
+            $membership = app(\App\Services\Tenancy\TenantResolver::class)->currentCompanyUser($user, app('currentCompany'));
+
+            if (! $membership) {
+                $query->whereRaw('1 = 0');
+
+                return;
+            }
+
+            $assignedIds = $membership->condominiums()->pluck('condominiums.id');
+
+            if ($assignedIds->isNotEmpty()) {
+                $query->whereIn('condominiums.id', $assignedIds->all());
+            }
+        });
+    }
 }

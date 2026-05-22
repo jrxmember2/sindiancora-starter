@@ -2,15 +2,41 @@
 
 return [
     'current' => [
-        'number' => env('APP_VERSION', '0.5.0'),
-        'name' => env('APP_RELEASE_NAME', 'User Access Control'),
+        'number' => env('APP_VERSION', '0.7.0'),
+        'name' => env('APP_RELEASE_NAME', 'Tenant Governance'),
         'stage' => env('APP_RELEASE_STAGE', 'production'),
-        'released_at' => env('APP_RELEASED_AT', '2026-05-21'),
+        'released_at' => env('APP_RELEASED_AT', '2026-05-22'),
         'build_sha' => env('APP_BUILD_SHA', env('GIT_SHA')),
         'visibility' => 'superadmin',
     ],
 
     'history' => [
+        [
+            'number' => '0.7.0',
+            'name' => 'Tenant Governance',
+            'stage' => 'production',
+            'released_at' => '2026-05-22',
+            'visibility' => 'superadmin',
+            'highlights' => [
+                'Usuários da plataforma foram separados dos usuários internos das empresas clientes.',
+                'Onboarding comercial passou a criar empresa, licença e admin master com troca obrigatória de senha no primeiro acesso.',
+                'Condomínios passaram a usar registro canônico por documento com vínculos principal e solidário entre empresas.',
+                'Fluxos de solicitar, mesclar, transferir, recusar e forçar transferência ficaram auditáveis e visíveis ao superadmin.',
+            ],
+        ],
+        [
+            'number' => '0.6.0',
+            'name' => 'Condominium Portfolio',
+            'stage' => 'production',
+            'released_at' => '2026-05-22',
+            'visibility' => 'superadmin',
+            'highlights' => [
+                'Carteira de condomínios ganhou filtros, indicadores de ativos x inativos e listagem com identidade visual.',
+                'Upload e remoção de logo foram implementados com persistência em storage público.',
+                'Limite de condomínios ativos passou a bloquear criação e reativação acima do contratado.',
+                'Criação, edição e inativação de condomínios passaram a registrar logs iniciais em audit_logs.',
+            ],
+        ],
         [
             'number' => '0.5.0',
             'name' => 'User Access Control',

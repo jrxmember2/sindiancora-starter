@@ -4,13 +4,17 @@ return [
     'roles' => [
         'admin' => [
             'label' => 'Admin da empresa',
-            'description' => 'Gerencia usuários internos, vínculos por condomínio e configurações operacionais.',
+            'description' => 'Gerencia usuários internos, vínculos por condomínio, carteira de condomínios e configurações operacionais.',
             'abilities' => [
                 'view_company_users',
                 'create_company_users',
                 'update_company_users',
                 'deactivate_company_users',
                 'assign_user_condominiums',
+                'view_condominiums',
+                'create_condominiums',
+                'update_condominiums',
+                'deactivate_condominiums',
             ],
         ],
         'gestor' => [

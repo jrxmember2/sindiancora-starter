@@ -17,7 +17,7 @@ class IssueController extends Controller
         $tenantResolver = app(TenantResolver::class);
         $company = app('currentCompany');
         $user = request()->user();
-        $query = $tenantResolver->scopeByAccessibleCondominiums(Issue::query(), $user, $company);
+        $query = $tenantResolver->scopeByAccessibleCondominiums(Issue::query()->withoutGlobalScopes(), $user, $company);
         $query = $tenantResolver->scopeByIssueAssignments($query, $user, $company);
 
         return Inertia::render('Tenant/Issues/Index', [
@@ -48,6 +48,7 @@ class IssueController extends Controller
         $companyUser = app(TenantResolver::class)->currentCompanyUser($request->user(), app('currentCompany'));
 
         Issue::create($request->validated() + [
+            'company_id' => app('currentCompany')->id,
             'origin' => 'interno',
             'opened_at' => now(),
             'created_by' => $request->user()->id,

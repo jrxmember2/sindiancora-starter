@@ -2,7 +2,7 @@
 
 ## Objetivo da arquitetura
 
-Criar uma base segura para um SaaS multiempresa de gestao condominial, com separacao clara entre operacao, licenciamento, tenant e autorizacao.
+Criar uma base segura para um SaaS multiempresa de gestão condominial, com separação clara entre operação, licenciamento, tenant e autorização.
 
 ## Stack principal
 
@@ -14,41 +14,43 @@ Criar uma base segura para um SaaS multiempresa de gestao condominial, com separ
 - TailwindCSS 3
 - Vite
 
-## Visao de alto nivel
+## Visão de alto nível
 
-O sistema e um monolito modular.
+O sistema é um monolito modular.
 
-- backend HTTP, regras de negocio, validacoes e persistencia ficam no Laravel
+- backend HTTP, regras de negócio, validações e persistência ficam no Laravel
 - frontend do painel fica em React + Inertia
 - banco principal fica no PostgreSQL
-- fila, cache e sessao podem usar Redis
-- deploy e executado no EasyPanel
+- fila, cache e sessão podem usar Redis
+- deploy é executado no EasyPanel
 
-## Principios arquiteturais
+## Princípios arquiteturais
 
-- toda entidade operacional precisa de `company_id`
+- toda entidade privada da empresa precisa de `company_id`
 - nenhuma consulta operacional deve confiar apenas em `id`
 - controllers devem ser finos
-- regras de negocio devem sair do controller ao evoluir o projeto
-- autorizacao deve ficar centralizada em `Policies/Gates`
-- validacao deve ir para `Form Requests`
-- modulos precisam ser bloqueados em frontend, rota e backend
+- regras de negócio devem sair do controller ao evoluir o projeto
+- autorização deve ficar centralizada em `Policies/Gates`
+- validação deve ir para `Form Requests`
+- módulos precisam ser bloqueados em frontend, rota e backend
+- entidades operacionais ligadas ao condomínio devem evoluir para validar vínculo ativo com o condomínio, e não apenas `company_id`
 
 ## Camadas atuais
 
 - `app/Http/Controllers`: fluxo web
-- `app/Http/Middleware`: superadmin, tenant, licenca e modulo
-- `app/Models`: entidades de dominio
+- `app/Http/Middleware`: superadmin, tenant, licença e módulo
+- `app/Models`: entidades de domínio
 - `app/Services/Licensing`: regras iniciais de licenciamento
-- `resources/js/Layouts`: shells do painel e autenticacao
+- `app/Services/Permissions`: abilities por empresa
+- `resources/js/Layouts`: shells do painel e autenticação
 - `resources/js/Pages`: telas por contexto funcional
-- `config/`: configuracoes da aplicacao
+- `config/`: configurações da aplicação
 - `database/migrations`: contrato do banco
-- `database/seeders`: bootstrap de modulos e superadmin
+- `database/seeders`: bootstrap de módulos e superadmin
 
-## Estrutura alvo de evolucao
+## Estrutura alvo de evolução
 
-Ao longo das proximas fases, a base deve convergir para algo proximo disto:
+Ao longo das próximas fases, a base deve convergir para algo próximo disto:
 
 ```txt
 app/
@@ -81,23 +83,72 @@ tests/
   Unit/
 ```
 
-## Estrategia de multiempresa
+## Estratégia de multiempresa
 
-Base atual:
+### Base atual
 
-- `SetCurrentCompany` define a empresa ativa em sessao
+- `SetCurrentCompany` define a empresa ativa em sessão
 - `BelongsToCompany` adiciona `CompanyScope`
 - `CompanyScope` injeta filtro por `company_id` quando existe empresa ativa
+- `company_users` vincula usuário, empresa, papel e flags adicionais
+- `user_condominiums` já prepara escopo por condomínio para usuários internos
 
-Regras obrigatorias:
+### Regras obrigatórias
 
-- usuario nao superadmin sempre opera dentro de uma empresa ativa
-- toda entidade operacional deve herdar ou reproduzir o comportamento tenant-aware
-- em modulos com escopo por condominio, o filtro deve considerar `company_id` e condominios permitidos
+- usuário não superadmin sempre opera dentro de uma empresa ativa
+- toda entidade privada da empresa deve herdar ou reproduzir o comportamento tenant-aware
+- em módulos com escopo por condomínio, o filtro precisa considerar empresa ativa e condomínios permitidos
 
-## Estrategia de licenciamento
+### Evolução planejada
 
-Base atual:
+- existem dois níveis claros de administração: plataforma e empresa cliente
+- `users.is_superadmin` deve ficar restrito ao time da plataforma
+- o usuário principal do cliente deve ser o admin master da empresa, sem receber poderes de superadmin da plataforma
+- dados privados da empresa continuam presos a `company_id`
+- dados operacionais do condomínio devem evoluir para um modelo de registro canônico + vínculos ativos entre empresa e condomínio
+- o tenancy futuro precisa validar não apenas `company_id`, mas também o vínculo ativo da empresa com o condomínio acessado
+
+## Plataforma x empresa cliente
+
+### Plataforma
+
+- superadmin vê tudo
+- superadmin cria empresa, licença e usuário principal do cliente
+- usuários do time da Serratech ficam separados conceitualmente dos usuários das empresas clientes
+
+### Empresa cliente
+
+- o usuário principal da empresa é o admin master do tenant
+- ele enxerga apenas os dados da própria empresa
+- ele cria condomínios, usuários internos e demais cadastros conforme a licença liberada
+
+## Condomínios compartilhados e transição de gestão
+
+### Conceito registrado
+
+- um condomínio pode começar com uma empresa administradora principal
+- em casos raros, outra empresa pode solicitar acesso ao mesmo condomínio por CNPJ
+- essa tentativa não deve criar um segundo condomínio duplicado
+- a empresa principal atual deve poder decidir entre transferir, mesclar ou recusar
+- o superadmin da plataforma pode resolver o conflito manualmente
+
+### Direção de modelagem
+
+- manter um registro canônico do condomínio identificado por documento/CNPJ
+- separar o vínculo empresa-condomínio em tabela própria, com papel, status e datas
+- distinguir dados privados da empresa de dados operacionais do condomínio
+- preparar trilha auditável para solicitações, decisões e transferências
+
+### Implicações arquiteturais
+
+- nem todo dado operacional poderá continuar dependente apenas de `company_id`
+- chamados, documentos, manutenções, obras e demais módulos ligados ao condomínio devem migrar para regras baseadas em vínculo ativo com o condomínio
+- itens comerciais, usuários internos, agenda privada e observações sensíveis da empresa anterior não devem migrar automaticamente em uma transferência
+- essa revisão precisa acontecer antes de aprofundar os módulos operacionais das próximas fases
+
+## Estratégia de licenciamento
+
+### Base atual
 
 - `licenses`
 - `modules`
@@ -105,48 +156,49 @@ Base atual:
 - `LicenseGuard`
 - middlewares `EnsureLicenseIsActive` e `EnsureModuleIsEnabled`
 
-Meta:
+### Meta
 
-- controlar acesso a modulo
-- controlar limite de condominios ativos
-- controlar limite de usuarios internos
+- controlar acesso a módulo
+- controlar limite de condomínios ativos
+- controlar limite de usuários internos
 - controlar storage, IA e WhatsApp
-- registrar historico e consumo
+- registrar histórico e consumo
 
-## Estrategia de permissoes
+## Estratégia de permissões
 
-Base atual:
+### Base atual
 
 - superadmin por `users.is_superadmin`
 - perfil base por `company_users.role`
 - flags adicionais em `company_users`
 
-Meta:
+### Meta
 
 - policies por agregado
-- gates para acoes criticas
-- permissao por modulo e por acao
-- vinculo usuario x condominio
+- gates para ações críticas
+- permissão por módulo e por ação
+- vínculo usuário x condomínio
+- distinção clara entre permissões da plataforma e permissões do tenant
 
-## Estrategia de frontend
+## Estratégia de frontend
 
-- Inertia para navegacao entre telas do painel
-- componentes React reutilizaveis
-- layout autenticado e layout de autenticacao separados
-- branding propio da plataforma
-- bloqueio visual de modulos sem liberar acesso real pelo backend
+- Inertia para navegação entre telas do painel
+- componentes React reutilizáveis
+- layout autenticado e layout de autenticação separados
+- branding próprio da plataforma
+- bloqueio visual de módulos sem liberar acesso real pelo backend
 
-## Estrategia de observabilidade
+## Estratégia de observabilidade
 
-- logs de aplicacao via Laravel
-- historico de versoes visivel para superadmin
+- logs de aplicação via Laravel
+- histórico de versões visível para superadmin
 - auditoria funcional em fases posteriores
-- monitoramento de fila, cron e falhas em producao
+- monitoramento de fila, cron e falhas em produção
 
-## Riscos tecnicos atuais
+## Riscos técnicos atuais
 
-- ausencia de testes automatizados
-- controller ainda concentra validacoes em varios pontos
-- scheduler ainda nao deve ser ativado sem ajustar `job_batches`
-- upload e storage ainda nao foram endurecidos
-- bundle frontend esta grande e vai precisar de code splitting depois
+- o tenancy compartilhado por condomínio ainda não foi implementado
+- parte do domínio operacional ainda pressupõe `company_id` como fronteira suficiente
+- uploads reais de documentos ainda não foram endurecidos
+- scheduler ainda não deve ser ativado sem revisar `job_batches`
+- bundle frontend está grande e vai precisar de code splitting depois

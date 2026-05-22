@@ -40,10 +40,11 @@ export default function Form({
   alerts = [],
   history = [],
   statusSummary = null,
+  prefillCompanyId = null,
 }) {
   const editing = Boolean(license);
   const { data, setData, post, put, processing, errors } = useForm({
-    company_id: license?.company_id || '',
+    company_id: license?.company_id || prefillCompanyId || '',
     contract_number: license?.contract_number || '',
     status: license?.status || 'active',
     financial_status: license?.financial_status || 'current',

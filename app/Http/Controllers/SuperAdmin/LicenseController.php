@@ -32,6 +32,8 @@ class LicenseController extends Controller
 
     public function create(): Response
     {
+        $prefillCompanyId = request()->integer('company_id') ?: null;
+
         return Inertia::render('SuperAdmin/Licenses/Form', [
             'license' => null,
             'enabledModules' => [],
@@ -41,6 +43,7 @@ class LicenseController extends Controller
             'alerts' => [],
             'history' => [],
             'statusSummary' => null,
+            'prefillCompanyId' => $prefillCompanyId,
         ]);
     }
 

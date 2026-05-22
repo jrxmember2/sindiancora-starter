@@ -18,7 +18,10 @@ class LicenseUsageService
             ['company_id' => $company->id],
             [
                 'license_id' => $trackedLicense?->id,
-                'active_condominiums' => $company->condominiums()->withoutGlobalScopes()->where('status', 'active')->count(),
+                'active_condominiums' => $company->condominiums()
+                    ->where('condominiums.status', 'active')
+                    ->distinct('condominiums.id')
+                    ->count('condominiums.id'),
                 'active_internal_users' => $company->companyUsers()->where('status', 'active')->count(),
                 'storage_used_mb' => $existing?->storage_used_mb ?? 0,
                 'whatsapp_instances_used' => $existing?->whatsapp_instances_used ?? 0,

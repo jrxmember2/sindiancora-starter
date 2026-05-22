@@ -96,14 +96,33 @@ class TenantResolver
             return collect();
         }
 
+        $linkedIds = Condominium::query()
+            ->withoutGlobalScopes()
+            ->whereHas('companyLinks', function (Builder $query) use ($company) {
+                $query
+                    ->where('company_id', $company->id)
+                    ->where('status', 'active');
+            })
+            ->pluck('condominiums.id');
+
         $ids = $companyUser->condominiums()->pluck('condominiums.id');
 
-        return $ids->isEmpty() ? null : $ids;
+        if ($ids->isEmpty()) {
+            return $linkedIds->values();
+        }
+
+        return $linkedIds->intersect($ids)->values();
     }
 
     public function accessibleCondominiumsQuery(User $user, Company $company): Builder
     {
-        $query = Condominium::query();
+        $query = Condominium::query()
+            ->withoutGlobalScopes()
+            ->whereHas('companyLinks', function (Builder $linkQuery) use ($company) {
+                $linkQuery
+                    ->where('company_id', $company->id)
+                    ->where('status', 'active');
+            });
         $accessibleIds = $this->accessibleCondominiumIds($user, $company);
 
         if ($accessibleIds !== null) {

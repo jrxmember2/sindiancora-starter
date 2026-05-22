@@ -3,7 +3,7 @@
 namespace App\Services\Permissions;
 
 use App\Models\Company;
-use App\Models\CompanyUser;
+use App\Models\Condominium;
 use App\Models\User;
 use App\Services\Tenancy\TenantResolver;
 
@@ -21,6 +21,10 @@ class CompanyPermissionService
             'update_company_users',
             'deactivate_company_users',
             'assign_user_condominiums',
+            'view_condominiums',
+            'create_condominiums',
+            'update_condominiums',
+            'deactivate_condominiums',
         ];
 
         $abilities = array_fill_keys($abilityKeys, false);
@@ -50,7 +54,7 @@ class CompanyPermissionService
         return $abilities;
     }
 
-    public function can(?User $user, ?Company $company, string $ability, ?CompanyUser $target = null): bool
+    public function can(?User $user, ?Company $company, string $ability, mixed $target = null): bool
     {
         if (! $user) {
             return false;
@@ -70,7 +74,14 @@ class CompanyPermissionService
             return false;
         }
 
-        if ($target && (int) $target->company_id !== (int) $company->id) {
+        if ($target instanceof Condominium) {
+            return $target->companyLinks()
+                ->where('company_id', $company->id)
+                ->where('status', 'active')
+                ->exists();
+        }
+
+        if ($target && isset($target->company_id) && (int) $target->company_id !== (int) $company->id) {
             return false;
         }
 

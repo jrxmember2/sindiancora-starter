@@ -11,7 +11,7 @@ class IssueRequest extends TenantFormRequest
     public function rules(): array
     {
         return [
-            'condominium_id' => ['required', 'integer', $this->existsInCurrentCompany('condominiums')],
+            'condominium_id' => ['required', 'integer', $this->existsInAccessibleCondominiums()],
             'subject' => ['required', 'string', 'max:180'],
             'description' => ['required', 'string'],
             'status' => ['required', Rule::in(['pendente', 'em_andamento', 'aguardando_assembleia', 'finalizado', 'cancelado'])],

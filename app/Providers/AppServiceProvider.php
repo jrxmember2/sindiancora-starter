@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\CompanyUser;
+use App\Models\Condominium;
 use App\Models\User;
 use App\Policies\CompanyUserPolicy;
+use App\Policies\CondominiumPolicy;
 use App\Services\Permissions\CompanyPermissionService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Gate::policy(CompanyUser::class, CompanyUserPolicy::class);
+        Gate::policy(Condominium::class, CondominiumPolicy::class);
 
         Gate::define('view-company-users', function (User $user) {
             return app(CompanyPermissionService::class)->can($user, $this->currentCompany(), 'view_company_users');

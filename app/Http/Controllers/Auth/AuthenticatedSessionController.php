@@ -35,6 +35,10 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
+        if ($user->requiresPasswordChange()) {
+            return redirect()->route('password.setup.edit');
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 

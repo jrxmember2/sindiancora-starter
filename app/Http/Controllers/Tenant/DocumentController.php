@@ -20,7 +20,7 @@ class DocumentController extends Controller
 
         return Inertia::render('Tenant/Documents/Index', [
             'items' => $tenantResolver
-                ->scopeByAccessibleCondominiums(Document::query(), request()->user(), $company, includeNull: true)
+                ->scopeByAccessibleCondominiums(Document::query()->withoutGlobalScopes(), request()->user(), $company, includeNull: true)
                 ->with('condominium:id,name')
                 ->latest()
                 ->paginate(15),
@@ -44,7 +44,10 @@ class DocumentController extends Controller
 
     public function store(DocumentRequest $request): RedirectResponse
     {
-        Document::create($request->validated() + ['created_by' => $request->user()->id]);
+        Document::create($request->validated() + [
+            'company_id' => app('currentCompany')->id,
+            'created_by' => $request->user()->id,
+        ]);
 
         return redirect()->route('documents.index')->with('success', 'Documento criado com sucesso.');
     }

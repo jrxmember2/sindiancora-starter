@@ -11,7 +11,7 @@ class DocumentRequest extends TenantFormRequest
     public function rules(): array
     {
         return [
-            'condominium_id' => ['nullable', 'integer', $this->existsInCurrentCompany('condominiums')],
+            'condominium_id' => ['nullable', 'integer', $this->existsInAccessibleCondominiums()],
             'title' => ['required', 'string', 'max:180'],
             'document_type' => ['required', 'string', 'max:80'],
             'amount' => ['nullable', 'numeric', 'min:0'],

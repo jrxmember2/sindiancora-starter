@@ -5,6 +5,7 @@ namespace Tests\Feature\Auth;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -25,6 +26,7 @@ class LoginTest extends TestCase
             'email' => 'superadmin@example.com',
             'password' => 'password',
             'is_superadmin' => true,
+            'must_change_password' => false,
         ]);
 
         $response = $this->post('/login', [
@@ -39,8 +41,8 @@ class LoginTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('SuperAdmin/Versions/Index')
-                ->where('currentVersion.number', '0.5.0')
-                ->where('currentVersion.name', 'User Access Control')
+                ->where('currentVersion.number', '0.7.0')
+                ->where('currentVersion.name', 'Tenant Governance')
                 ->where('currentVersion.visibility', 'superadmin'));
     }
 
@@ -49,6 +51,7 @@ class LoginTest extends TestCase
         $user = User::factory()->create([
             'email' => 'tenant@example.com',
             'password' => 'password',
+            'must_change_password' => false,
         ]);
 
         $company = Company::factory()->create();
@@ -58,6 +61,7 @@ class LoginTest extends TestCase
             'status' => 'active',
             'can_access_whatsapp' => false,
             'only_responsible_issues' => false,
+            'is_primary' => true,
         ]);
 
         $response = $this->post('/login', [
@@ -68,6 +72,69 @@ class LoginTest extends TestCase
         $response->assertRedirect('/dashboard');
         $response->assertSessionHas('current_company_id', $company->id);
         $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_first_access_user_is_redirected_to_password_setup(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'first-access@example.com',
+            'password' => 'password',
+            'must_change_password' => true,
+        ]);
+
+        $company = Company::factory()->create();
+
+        $user->companies()->attach($company->id, [
+            'role' => 'admin',
+            'status' => 'active',
+            'can_access_whatsapp' => false,
+            'only_responsible_issues' => false,
+            'is_primary' => true,
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'first-access@example.com',
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect('/primeiro-acesso');
+        $response->assertSessionHas('current_company_id', $company->id);
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_user_can_finish_first_access_password_setup(): void
+    {
+        $user = User::factory()->create([
+            'must_change_password' => true,
+        ]);
+
+        $company = Company::factory()->create();
+
+        $user->companies()->attach($company->id, [
+            'role' => 'admin',
+            'status' => 'active',
+            'can_access_whatsapp' => false,
+            'only_responsible_issues' => false,
+            'is_primary' => true,
+        ]);
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $company->id])
+            ->put('/primeiro-acesso', [
+                'password' => 'NovaSenha123',
+                'password_confirmation' => 'NovaSenha123',
+            ])
+            ->assertRedirect('/dashboard');
+
+        $user->refresh();
+
+        $this->assertFalse($user->must_change_password);
+        $this->assertTrue(Hash::check('NovaSenha123', $user->password));
+
+        $this->actingAs($user)
+            ->withSession(['current_company_id' => $company->id])
+            ->get('/dashboard')
+            ->assertOk();
     }
 
     public function test_invalid_credentials_do_not_authenticate_the_user(): void
@@ -101,6 +168,7 @@ class LoginTest extends TestCase
             'status' => 'inactive',
             'can_access_whatsapp' => false,
             'only_responsible_issues' => false,
+            'is_primary' => false,
         ]);
 
         $response = $this->from('/login')->post('/login', [
