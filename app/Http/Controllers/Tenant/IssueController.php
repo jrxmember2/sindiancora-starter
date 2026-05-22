@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\IssueRequest;
-use App\Models\Condominium;
 use App\Models\Issue;
 use App\Services\Tenancy\TenantResolver;
 use Illuminate\Http\RedirectResponse;
@@ -17,10 +16,12 @@ class IssueController extends Controller
     {
         $tenantResolver = app(TenantResolver::class);
         $company = app('currentCompany');
+        $user = request()->user();
+        $query = $tenantResolver->scopeByAccessibleCondominiums(Issue::query(), $user, $company);
+        $query = $tenantResolver->scopeByIssueAssignments($query, $user, $company);
 
         return Inertia::render('Tenant/Issues/Index', [
-            'issues' => $tenantResolver
-                ->scopeByAccessibleCondominiums(Issue::query(), request()->user(), $company)
+            'issues' => $query
                 ->with('condominium:id,name')
                 ->latest()
                 ->paginate(15),
@@ -44,10 +45,13 @@ class IssueController extends Controller
 
     public function store(IssueRequest $request): RedirectResponse
     {
+        $companyUser = app(TenantResolver::class)->currentCompanyUser($request->user(), app('currentCompany'));
+
         Issue::create($request->validated() + [
             'origin' => 'interno',
             'opened_at' => now(),
             'created_by' => $request->user()->id,
+            'responsible_user_id' => $companyUser?->only_responsible_issues ? $request->user()->id : null,
         ]);
 
         return redirect()->route('issues.index')->with('success', 'Chamado criado com sucesso.');
@@ -56,7 +60,7 @@ class IssueController extends Controller
     public function edit(Issue $issue): Response
     {
         abort_unless(
-            app(TenantResolver::class)->canAccessCondominium(request()->user(), app('currentCompany'), $issue->condominium_id),
+            app(TenantResolver::class)->canAccessIssue(request()->user(), app('currentCompany'), $issue),
             404
         );
 
@@ -76,7 +80,7 @@ class IssueController extends Controller
     public function update(IssueRequest $request, Issue $issue): RedirectResponse
     {
         abort_unless(
-            app(TenantResolver::class)->canAccessCondominium($request->user(), app('currentCompany'), $issue->condominium_id),
+            app(TenantResolver::class)->canAccessIssue($request->user(), app('currentCompany'), $issue),
             404
         );
 
@@ -88,7 +92,7 @@ class IssueController extends Controller
     public function destroy(Issue $issue): RedirectResponse
     {
         abort_unless(
-            app(TenantResolver::class)->canAccessCondominium(request()->user(), app('currentCompany'), $issue->condominium_id),
+            app(TenantResolver::class)->canAccessIssue(request()->user(), app('currentCompany'), $issue),
             404
         );
 

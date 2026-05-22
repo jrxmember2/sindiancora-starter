@@ -5,6 +5,7 @@ namespace App\Services\Tenancy;
 use App\Models\Company;
 use App\Models\CompanyUser;
 use App\Models\Condominium;
+use App\Models\Issue;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -134,6 +135,29 @@ class TenantResolver
         });
     }
 
+    public function scopeByIssueAssignments(
+        Builder $query,
+        User $user,
+        Company $company,
+        string $responsibleColumn = 'responsible_user_id',
+    ): Builder {
+        if ($user->isSuperAdmin()) {
+            return $query;
+        }
+
+        $companyUser = $this->currentCompanyUser($user, $company);
+
+        if (! $companyUser) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        if (! $companyUser->only_responsible_issues) {
+            return $query;
+        }
+
+        return $query->where($responsibleColumn, $user->id);
+    }
+
     public function canAccessCondominium(User $user, Company $company, int|string|null $condominiumId): bool
     {
         if ($condominiumId === null) {
@@ -143,6 +167,29 @@ class TenantResolver
         $accessibleIds = $this->accessibleCondominiumIds($user, $company);
 
         return $accessibleIds === null || $accessibleIds->contains((int) $condominiumId);
+    }
+
+    public function canAccessIssue(User $user, Company $company, Issue $issue): bool
+    {
+        if (! $this->canAccessCondominium($user, $company, $issue->condominium_id)) {
+            return false;
+        }
+
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        $companyUser = $this->currentCompanyUser($user, $company);
+
+        if (! $companyUser) {
+            return false;
+        }
+
+        if (! $companyUser->only_responsible_issues) {
+            return true;
+        }
+
+        return (int) $issue->responsible_user_id === (int) $user->id;
     }
 
     public function canSwitchToCompany(User $user, int $companyId): bool

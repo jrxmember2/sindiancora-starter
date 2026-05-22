@@ -1,63 +1,66 @@
 # README do Projeto
 
-## Visao geral
+## Visão geral
 
-SindiAncora e um SaaS multiempresa para gestao condominial com foco em operacao, controle contratual e evolucao segura por fases.
+SindiAncora é um SaaS multiempresa para gestão condominial com foco em operação, controle contratual e evolução segura por fases.
 
-Este documento registra a base formalizada do projeto apos as Fases 0, 1, 2 e 3, organizando:
+Este documento registra a base formalizada do projeto após as Fases 0, 1, 2, 3 e 4, organizando:
 
 - arquitetura proposta
-- padroes de implementacao
+- padrões de implementação
 - regras de multiempresa
-- estrategia de licenciamento
-- estrategia de permissao
+- estratégia de licenciamento
+- estratégia de permissão
 - modelo inicial de banco
 - deploy no EasyPanel
-- backlog executavel das proximas fases
+- backlog executável das próximas fases
 
-## Ambiente de producao
+## Ambiente de produção
 
 - URL: `https://sindiancora.serratech.tec.br`
 - builder recomendado: `Nixpacks`
-- visibilidade de versao: superadmin
+- visibilidade de versão: superadmin
 
-## Versao atual da base
+## Versão atual da base
 
-- versao: `0.4.0`
-- release: `Contract Licensing`
-- status: base publicada com login funcional, tenancy endurecido e licenciamento contratual operacional
+- versão: `0.5.0`
+- release: `User Access Control`
+- status: base publicada com login funcional, tenancy endurecido, licenciamento contratual operacional e gestão inicial de usuários internos
 
-## O que esta implementado
+## O que está implementado
 
-- autenticacao web com superadmin
+- autenticação web com superadmin
 - dashboard inicial revisado
 - CRUD inicial de empresas
-- CRUD inicial de licencas
-- catalogo de modulos
-- CRUD inicial de condominios
+- CRUD inicial de licenças
+- catálogo de módulos
+- CRUD inicial de condomínios
 - CRUD inicial de fornecedores
 - CRUD inicial de documentos
 - CRUD inicial de chamados
-- alternancia de empresa na sessao
-- middlewares iniciais de licenca e modulo
+- alternância de empresa na sessão
+- middlewares iniciais de licença e módulo
 - tela de versionamento exclusiva do superadmin
-- Form Requests nos fluxos principais
-- componentes base do painel para tabela, drawer, modal, confirmacao e toast
-- validacao da empresa ativa antes do route model binding
-- troca de empresa limitada a vinculos ativos
-- preparacao de `user_condominiums` e escopo por condominio em chamados/documentos
-- historico de licenca em banco
-- uso de licenca persistido por empresa
-- tela "Minha licenca" para leitura operacional do contrato
+- `Form Requests` nos fluxos principais
+- componentes base do painel para tabela, drawer, modal, confirmação e toast
+- validação da empresa ativa antes do route model binding
+- troca de empresa limitada a vínculos ativos
+- preparação de `user_condominiums` e escopo por condomínio em chamados/documentos
+- histórico de licença em banco
+- uso de licença persistido por empresa
+- tela "Minha licença" para leitura operacional do contrato
 - alertas contratuais e status de somente leitura
+- gestão de usuários internos com papéis por empresa
+- policies e gates para a área de usuários
+- logs iniciais de criação, edição e inativação de usuários internos
 
-## O que ainda nao esta endurecido
+## O que ainda não está endurecido
 
-- policies e gates
 - uploads reais de documentos
-- worker/scheduler ativos em producao
-- auditoria automatica
-- notificacoes
+- worker/scheduler ativos em produção
+- auditoria transversal completa da plataforma
+- notificações
+- matriz granular de permissão para todos os módulos operacionais
 
 ## Leitura recomendada
 

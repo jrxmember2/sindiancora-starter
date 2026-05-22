@@ -1,4 +1,4 @@
-# Permissoes
+# Permissões
 
 ## Perfis planejados
 
@@ -7,7 +7,7 @@
 - Gestor
 - Operacional
 - Financeiro
-- Condomino
+- Condômino
 
 ## Base atual implementada
 
@@ -16,72 +16,88 @@
 - `company_users.status`
 - `company_users.can_access_whatsapp`
 - `company_users.only_responsible_issues`
+- `config/company_permissions.php`
+- `CompanyPermissionService`
+- `CompanyUserPolicy`
+- gates para `view/create/update/deactivate` usuários internos
+- escopo `user_condominiums`
 
 ## Estado atual
 
-Hoje a plataforma ja separa:
+Hoje a plataforma já separa:
 
 - acesso total do superadmin
 - acesso autenticado comum
 - acesso por empresa ativa
-- acesso por licenca ativa
-- acesso por modulo liberado
+- acesso por licença ativa
+- acesso por módulo liberado
+- acesso por ability na gestão de usuários internos
+- acesso por condomínio permitido
+- limitação opcional para ver apenas chamados atribuídos
 
 Ainda faltam:
 
-- `Policies`
-- `Gates`
-- permissao por acao
-- permissao por condominio
-- permissao por recurso financeiro
+- matriz granular por ação para os módulos operacionais restantes
+- policies específicas para fornecedores, documentos, categorias e financeiro
+- tela administrativa de auditoria por permissão
+- preferências de notificação por usuário
 
-## Matriz alvo
+## Matriz atual da Fase 4
 
 ### Superadmin
 
 - gerencia tenants
-- gerencia licencas
-- gerencia modulos
-- visualiza versoes da plataforma
-- nao deve depender de empresa ativa para rotinas administrativas
+- gerencia licenças
+- gerencia módulos
+- visualiza versões da plataforma
+- ignora empresa ativa para rotinas administrativas
 
 ### Admin da empresa
 
-- gerencia usuarios internos
-- gerencia condominios
-- visualiza uso da licenca
-- opera modulos liberados
+- gerencia usuários internos
+- vincula usuários a condomínios
+- visualiza uso da licença
+- opera módulos liberados
 
 ### Gestor
 
-- opera modulos liberados com maior amplitude
-- consulta indicadores e operacao
+- opera módulos liberados com maior amplitude
+- não gerencia usuários internos nesta fase
 
 ### Operacional
 
-- atua em chamados e tarefas permitidas
-- pode ser limitado a itens atribuidos
+- opera módulos liberados
+- pode ser limitado a chamados atribuídos
 
 ### Financeiro
 
-- acessa rotinas financeiras liberadas por modulo
+- perfil reservado para fases financeiras
+- ainda sem matriz de ações própria
 
-### Condomino
+### Condômino
 
 - previsto para fase posterior via app/API
-- nao consome limite de usuario interno
+- não consome limite de usuário interno
 
-## Regras obrigatorias
+## Abilities implementadas
 
-- permissao nunca substitui licenca
-- licenca nunca substitui permissao
-- tenant nunca deve ser inferido so pelo frontend
-- em modulos por condominio, validar condominio permitido ao usuario
+- `view_company_users`
+- `create_company_users`
+- `update_company_users`
+- `deactivate_company_users`
+- `assign_user_condominiums`
 
-## Proximos entregaveis
+## Regras obrigatórias
 
-- `Form Requests` para validacao
-- `Policies` por agregado
-- tabela de vinculo `user_condominiums`
-- tela de gestao de usuarios internos
-- matriz por modulo/acao
+- permissão nunca substitui licença
+- licença nunca substitui permissão
+- tenant nunca deve ser inferido só pelo frontend
+- em módulos por condomínio, validar condomínio permitido ao usuário
+- vínculos inativos não podem autenticar nem trocar empresa
+
+## Próximos entregáveis
+
+- policies por agregado operacional
+- matriz por módulo/ação além da área de usuários
+- autorização financeira específica
+- tela de consulta de logs por papel

@@ -2,17 +2,18 @@
 
 ## Status geral
 
-- Fase 0: concluida no codigo
-- Fase 1: concluida no codigo
-- Fase 2: concluida no codigo
-- Fase 3: concluida no codigo
-- Fase 4 em diante: nao iniciadas
+- Fase 0: concluída no código
+- Fase 1: concluída no código
+- Fase 2: concluída no código
+- Fase 3: concluída no código
+- Fase 4: concluída no código
+- Fase 5 em diante: não iniciadas
 
-## Fase 0 - Preparacao, documentacao e arquitetura
+## Fase 0 - Preparação, documentação e arquitetura
 
 ### Objetivo
 
-Endurecer a base do projeto antes da expansao funcional.
+Endurecer a base do projeto antes da expansão funcional.
 
 ### Entregas da fase
 
@@ -21,53 +22,53 @@ Endurecer a base do projeto antes da expansao funcional.
 - arquitetura formalizada
 - banco inicial documentado
 - licenciamento documentado
-- permissoes documentadas
+- permissões documentadas
 - deploy no EasyPanel documentado
 - backlog por fase organizado
 - checklist de testes inicial
 
-### Backlog executavel
+### Backlog executável
 
 - [x] revisar o estado real do projeto
-- [x] corrigir login em producao via proxy/https
+- [x] corrigir login em produção via proxy/https
 - [x] aplicar branding inicial
-- [x] criar versionamento visivel apenas para superadmin
-- [x] formalizar documentacao base
-- [x] criar testes minimos de autenticacao
-- [x] criar testes minimos de tenancy
-- [x] revisar scheduler e fila para producao
-- [x] padronizar textos sem ruido de encoding legado
+- [x] criar versionamento visível apenas para superadmin
+- [x] formalizar documentação base
+- [x] criar testes mínimos de autenticação
+- [x] criar testes mínimos de tenancy
+- [x] revisar scheduler e fila para produção
+- [x] padronizar textos sem ruído de encoding legado
 
-### Criterios de aceite
+### Critérios de aceite
 
-- login funcionando em producao
+- login funcionando em produção
 - build frontend funcionando
 - docs base atualizadas
-- direcao arquitetural definida
+- direção arquitetural definida
 
 ## Fase 1 - Base web e UX principal
 
 ### Objetivo
 
-Consolidar a fundacao do painel web.
+Consolidar a fundação do painel web.
 
-### Backlog executavel
+### Backlog executável
 
 - [x] completar componentes base faltantes
 - [x] revisar dashboard inicial
-- [x] padronizar formularios
-- [x] mover validacoes de controller para `Form Requests`
-- [x] adicionar toasts/notificacoes visuais
+- [x] padronizar formulários
+- [x] mover validações de controller para `Form Requests`
+- [x] adicionar toasts/notificações visuais
 - [x] revisar responsividade
 
-### Criterios de aceite
+### Critérios de aceite
 
 - login funcional
 - dashboard carregando
-- navegacao responsiva
-- formularios principais padronizados
+- navegação responsiva
+- formulários principais padronizados
 - build frontend validado
-- testes basicos PHP passando
+- testes básicos PHP passando
 
 ## Fase 2 - Multiempresa forte
 
@@ -75,52 +76,71 @@ Consolidar a fundacao do painel web.
 
 Garantir isolamento seguro entre tenants.
 
-### Backlog executavel
+### Backlog executável
 
 - [x] endurecer troca de empresa
 - [x] criar testes de vazamento entre empresas
 - [x] revisar queries operacionais por `company_id`
 - [x] preparar `user_condominiums`
 
-### Criterios de aceite
+### Critérios de aceite
 
 - empresa ativa resolvida antes do route model binding
-- usuario comum nao troca para empresa inativa, suspensa ou sem vinculo ativo
-- chamados e documentos respeitam company_id e, quando houver, escopo por condominio
-- testes de tenancy cobrindo URL direta, troca de empresa e escopo por condominio
+- usuário comum não troca para empresa inativa, suspensa ou sem vínculo ativo
+- chamados e documentos respeitam `company_id` e, quando houver, escopo por condomínio
+- testes de tenancy cobrindo URL direta, troca de empresa e escopo por condomínio
 
 ## Fase 3 - Licenciamento contratual
 
 ### Objetivo
 
-Completar o coracao comercial do SaaS.
+Completar o coração comercial do SaaS.
 
-### Backlog executavel
+### Backlog executável
 
 - [x] `license_history`
 - [x] `license_usage`
 - [x] completar `LicenseGuard`
-- [x] tela de uso da licenca
+- [x] tela de uso da licença
 - [x] alertas de limite
 - [x] bloquear escrita em modo somente leitura
-- [x] testes de contrato e bloqueio de modulo
+- [x] testes de contrato e bloqueio de módulo
 
-### Criterios de aceite
+### Critérios de aceite
 
-- superadmin cria e atualiza licencas com historico registrado
-- uso da licenca e sincronizado por empresa
-- empresa consegue visualizar contrato, modulos e limites em "Minha licenca"
-- modulos bloqueados nao podem ser acessados por URL direta
-- licenca em modo somente leitura permite consulta e bloqueia escrita
+- superadmin cria e atualiza licenças com histórico registrado
+- uso da licença é sincronizado por empresa
+- empresa consegue visualizar contrato, módulos e limites em "Minha licença"
+- módulos bloqueados não podem ser acessados por URL direta
+- licença em modo somente leitura permite consulta e bloqueia escrita
 
-## Fase 4 - Usuarios e permissoes
+## Fase 4 - Usuários e permissões
 
-- [ ] CRUD de usuarios internos
-- [ ] roles por empresa
-- [ ] policies e gates
-- [ ] vinculo usuario x condominio
+### Objetivo
 
-## Fase 5 - Condominios
+Criar a gestão de usuários internos da empresa com papéis, permissões e escopo por condomínio.
+
+### Backlog executável
+
+- [x] CRUD de usuários internos
+- [x] papéis por empresa com config central de abilities
+- [x] policies e gates para a área de usuários
+- [x] vínculo `user_condominiums` com tela de seleção
+- [x] validação de limite de usuários internos pela licença
+- [x] compartilhamento de abilities para o frontend
+- [x] limitação opcional de chamados para vínculos marcados como "somente atribuídos"
+- [x] logs iniciais de criação, edição e inativação em `audit_logs`
+
+### Critérios de aceite
+
+- admin da empresa cria usuários internos até o limite contratado
+- usuário sem permissão não acessa a gestão de usuários via menu, URL nem backend
+- vínculo sem condomínios marcados enxerga todos os condomínios ativos da empresa
+- vínculo com condomínios marcados só enxerga o escopo permitido
+- usuário operacional com flag de chamados atribuídos vê apenas a própria fila
+- suíte PHP cobre gestão de usuários, tenancy e restrições principais
+
+## Fase 5 - Condomínios
 
 - [ ] completar cadastro
 - [ ] revisar limites ativos/inativos
@@ -130,20 +150,20 @@ Completar o coracao comercial do SaaS.
 
 - [ ] CRUD completo de categorias
 - [ ] endurecer fornecedor por tenant
-- [ ] filtros e exportacao simples
+- [ ] filtros e exportação simples
 
 ## Fase 7 - Chamados
 
 - [ ] detalhes completos
-- [ ] responsavel e fornecedor
+- [ ] responsável e fornecedor
 - [ ] prazos e indicadores
 - [ ] anexos
 
 ## Fase 8 - Acompanhamentos
 
 - [ ] timeline do chamado
-- [ ] historico de status
-- [ ] historico de responsavel
+- [ ] histórico de status
+- [ ] histórico de responsável
 
 ## Fase 9 - Documentos
 
@@ -153,27 +173,27 @@ Completar o coracao comercial do SaaS.
 
 ## Fase 10 - Dashboard e home operacional
 
-- indicadores por empresa e condominio
-- cards clicaveis
-- leitura de uso e pendencias
+- indicadores por empresa e condomínio
+- cards clicáveis
+- leitura de uso e pendências
 
-## Fase 11 - Relatorios
+## Fase 11 - Relatórios
 
-- relatorios por periodo
+- relatórios por período
 - base para PDF
-- controle de conteudo publico x interno
+- controle de conteúdo público x interno
 
 ## Fase 12 - Cronograma
 
-- calendario mensal
+- calendário mensal
 - itens por dia
-- navegacao para o detalhe
+- navegação para o detalhe
 
-## Fase 13 - Manutencoes
+## Fase 13 - Manutenções
 
 - preventivas e corretivas
-- recorrencia
-- relatorio
+- recorrência
+- relatório
 
 ## Fase 14 - Obras
 
@@ -184,50 +204,50 @@ Completar o coracao comercial do SaaS.
 ## Fase 15 - Pagamentos
 
 - vencimentos
-- recorrencia
+- recorrência
 - parcelas
-- notificacoes internas
+- notificações internas
 
-## Fase 16 - Orcamentos
+## Fase 16 - Orçamentos
 
-- origem do orcamento
-- aprovacao
-- historico
+- origem do orçamento
+- aprovação
+- histórico
 
-## Fase 17 - Preferencias da empresa
+## Fase 17 - Preferências da empresa
 
-- parametros operacionais
-- configuracoes do app futuro
-- configuracoes de WhatsApp
+- parâmetros operacionais
+- configurações do app futuro
+- configurações de WhatsApp
 
 ## Fase 18 - Auditoria e logs
 
-- trilha de alteracoes
+- trilha de alterações
 - tela para superadmin
 - tela limitada para empresa
 
-## Fase 19 - Notificacoes
+## Fase 19 - Notificações
 
 - inbox interno
 - e-mail
-- preferencias por usuario
+- preferências por usuário
 
 ## Fase 20 - WhatsApp
 
-- configuracao de instancia
-- horario de atendimento
-- historico de conversa
+- configuração de instância
+- horário de atendimento
+- histórico de conversa
 
 ## Fase 21 - IA
 
-- correcoes de texto
-- sugestoes e resumos
-- controle de credito
+- correções de texto
+- sugestões e resumos
+- controle de crédito
 
-## Fase 22 - App do condomino
+## Fase 22 - App do condômino
 
 - API preparada
-- decisao Flutter x Expo antes da implementacao
+- decisão Flutter x Expo antes da implementação
 - funcionalidades iniciais do app
 
 ## Fase 23 - Deploy EasyPanel
@@ -236,14 +256,14 @@ Completar o coracao comercial do SaaS.
 - worker, scheduler e backup
 - checklist operacional
 
-## Fase 24 - Testes, seguranca e producao
+## Fase 24 - Testes, segurança e produção
 
-- testes criticos
-- revisao de performance
+- testes críticos
+- revisão de performance
 - monitoramento
 - readiness para venda
 
-## Regras de execucao
+## Regras de execução
 
 Em cada fase:
 
@@ -251,6 +271,6 @@ Em cada fase:
 2. listar arquivos alterados
 3. implementar
 4. validar build e migrations
-5. revisar seguranca e tenant
-6. atualizar documentacao
+5. revisar segurança e tenant
+6. atualizar documentação
 7. registrar a release

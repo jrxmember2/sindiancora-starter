@@ -39,8 +39,8 @@ class LoginTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('SuperAdmin/Versions/Index')
-                ->where('currentVersion.number', '0.4.0')
-                ->where('currentVersion.name', 'Contract Licensing')
+                ->where('currentVersion.number', '0.5.0')
+                ->where('currentVersion.name', 'User Access Control')
                 ->where('currentVersion.visibility', 'superadmin'));
     }
 
@@ -80,6 +80,32 @@ class LoginTest extends TestCase
         $response = $this->from('/login')->post('/login', [
             'email' => 'invalid@example.com',
             'password' => 'wrong-password',
+        ]);
+
+        $response->assertRedirect('/login');
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
+    public function test_user_without_active_company_membership_cannot_authenticate(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'inactive-membership@example.com',
+            'password' => 'password',
+        ]);
+
+        $company = Company::factory()->create();
+
+        $user->companies()->attach($company->id, [
+            'role' => 'operacional',
+            'status' => 'inactive',
+            'can_access_whatsapp' => false,
+            'only_responsible_issues' => false,
+        ]);
+
+        $response = $this->from('/login')->post('/login', [
+            'email' => 'inactive-membership@example.com',
+            'password' => 'password',
         ]);
 
         $response->assertRedirect('/login');

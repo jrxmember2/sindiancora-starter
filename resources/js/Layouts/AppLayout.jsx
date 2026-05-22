@@ -13,6 +13,7 @@ import {
   Settings,
   ShieldCheck,
   TicketCheck,
+  Users,
   Wrench,
 } from 'lucide-react';
 import Drawer from '@/Components/Drawer';
@@ -22,6 +23,7 @@ import { cn } from '@/lib/utils';
 const nav = [
   { label: 'Dashboard', href: '/dashboard', icon: Gauge },
   { label: 'Minha licença', href: '/app/license', icon: ShieldCheck },
+  { label: 'Usuários', href: '/app/users', icon: Users, moduleKey: 'configuracoes', abilityKey: 'view_company_users' },
   { label: 'Chamados', href: '/app/issues', icon: TicketCheck, moduleKey: 'chamados' },
   { label: 'Condomínios', href: '/app/condominiums', icon: Building2, moduleKey: 'configuracoes' },
   { label: 'Fornecedores', href: '/app/suppliers', icon: Wrench, moduleKey: 'fornecedores' },
@@ -42,10 +44,15 @@ export default function AppLayout({ title, children }) {
   const { url } = page;
   const isSuperadmin = auth?.user?.is_superadmin;
   const moduleAccess = tenant?.moduleAccess || {};
-  const items = isSuperadmin ? [...nav, ...superNav] : nav.map((item) => ({
-    ...item,
-    locked: item.moduleKey ? moduleAccess[item.moduleKey] === false : false,
-  }));
+  const abilities = tenant?.abilities || {};
+  const items = isSuperadmin
+    ? [...nav, ...superNav]
+    : nav
+        .filter((item) => !item.abilityKey || abilities[item.abilityKey])
+        .map((item) => ({
+          ...item,
+          locked: item.moduleKey ? moduleAccess[item.moduleKey] === false : false,
+        }));
   const [menuOpen, setMenuOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const lastFlashRef = useRef('');

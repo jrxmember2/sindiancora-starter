@@ -1,42 +1,43 @@
 # SindiAncora
 
-SindiAncora e uma plataforma SaaS multiempresa para gestao condominial, com licenciamento contratual personalizado por cliente.
+SindiAncora é uma plataforma SaaS multiempresa para gestão condominial, com licenciamento contratual personalizado por cliente.
 
-O projeto usa Laravel no backend, PostgreSQL como banco principal, Redis para fila/cache/sessao quando habilitado, e React + Inertia no painel web.
+O projeto usa Laravel no backend, PostgreSQL como banco principal, Redis para fila/cache/sessão quando habilitado, e React + Inertia no painel web.
 
 ## Objetivo do projeto
 
-Construir um sistema proprio para operacao condominial, sem copia de identidade, layout, codigo ou textos de terceiros, com foco em:
+Construir um sistema próprio para operação condominial, sem cópia de identidade, layout, código ou textos de terceiros, com foco em:
 
 - multiempresa com isolamento por `company_id`
-- licenciamento contratual flexivel
-- modulos habilitados por licenca
-- operacao de chamados, documentos, fornecedores e gestao futura de pagamentos, obras, manutencoes e app do condomino
+- licenciamento contratual flexível
+- módulos habilitados por licença
+- operação de chamados, documentos, fornecedores e gestão futura de pagamentos, obras, manutenções e app do condômino
 
 ## Estado atual
 
-A base atual ja entrega:
+A base atual já entrega:
 
-- autenticacao web
+- autenticação web
 - dashboard inicial revisado
 - superadmin
 - CRUD inicial de empresas
-- CRUD inicial de licencas
-- catalogo de modulos
-- CRUD inicial de condominios
+- CRUD inicial de licenças
+- catálogo de módulos
+- CRUD inicial de condomínios
 - CRUD inicial de fornecedores
 - CRUD inicial de documentos
 - CRUD inicial de chamados
-- versionamento visivel apenas para superadmin
+- versionamento visível apenas para superadmin
 - base de tenant com `currentCompany`, `BelongsToCompany` e `CompanyScope`
-- `LicenseGuard` e middlewares iniciais de licenca e modulo
+- `LicenseGuard` e middlewares iniciais de licença e módulo
 - `Form Requests` nos fluxos principais
-- componentes base do painel para tabela, drawer, modal, confirmacao e toast
+- componentes base do painel para tabela, drawer, modal, confirmação e toast
 - endurecimento da troca de empresa e do route model binding tenant-aware
-- preparacao de `user_condominiums` para escopo operacional por condominio
-- historico contratual de licencas em banco
-- snapshots de uso da licenca por empresa
-- tela "Minha licenca" com status, alertas, limites e modulos liberados
+- preparação de `user_condominiums` para escopo operacional por condomínio
+- histórico contratual de licenças em banco
+- snapshots de uso da licença por empresa
+- tela "Minha licença" com status, alertas, limites e módulos liberados
+- gestão de usuários internos com papéis, vínculo por condomínio, gates, policies e logs iniciais
 
 ## Stack
 
@@ -50,11 +51,11 @@ A base atual ja entrega:
 - Vite
 - Docker / EasyPanel
 
-## Instalacao local
+## Instalação local
 
-### 1. Dependencias
+### 1. Dependências
 
-Voce precisa de:
+Você precisa de:
 
 - PHP 8.3+
 - Composer 2
@@ -99,6 +100,7 @@ php artisan migrate --seed
 php artisan migrate:fresh --seed
 php artisan optimize:clear
 php artisan optimize
+php artisan test
 npm run dev
 npm run build
 ```
@@ -109,6 +111,7 @@ npm run build
 app/
   Http/
   Models/
+  Policies/
   Providers/
   Services/
 bootstrap/
@@ -126,7 +129,7 @@ routes/
 tests/
 ```
 
-## Variaveis de ambiente principais
+## Variáveis de ambiente principais
 
 ```env
 APP_NAME="SindiAncora"
@@ -135,8 +138,8 @@ APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
-APP_VERSION=0.4.0
-APP_RELEASE_NAME=Contract Licensing
+APP_VERSION=0.5.0
+APP_RELEASE_NAME="User Access Control"
 APP_RELEASE_STAGE=production
 APP_RELEASED_AT=2026-05-21
 APP_BUILD_SHA=
@@ -164,13 +167,13 @@ SUPERADMIN_PASSWORD="password"
 
 ## Deploy
 
-O deploy de producao e feito no EasyPanel com App Service + PostgreSQL e, depois da estabilizacao da base, Redis, worker e scheduler.
+O deploy de produção é feito no EasyPanel com App Service + PostgreSQL e, depois da estabilização da base, Redis, worker e scheduler.
 
 Guia detalhado:
 
 - [docs/DEPLOY_EASYPANEL.md](docs/DEPLOY_EASYPANEL.md)
 
-## Documentacao
+## Documentação
 
 - [docs/README_PROJETO.md](docs/README_PROJETO.md)
 - [docs/ARQUITETURA.md](docs/ARQUITETURA.md)
@@ -182,11 +185,11 @@ Guia detalhado:
 - [docs/CHECKLIST_TESTES.md](docs/CHECKLIST_TESTES.md)
 - [docs/PROMPTS_FASES.md](docs/PROMPTS_FASES.md)
 
-## Proximo passo recomendado
+## Próximo passo recomendado
 
-Com a Fase 3 concluida, a prioridade agora e:
+Com a Fase 4 concluída, a prioridade agora é:
 
-1. usuarios internos por empresa
-2. roles, policies e gates
-3. vinculo usuario x condominio
-4. endurecimento de autorizacao por modulo e acao
+1. completar o módulo de condomínios
+2. revisar limites de ativos x inativos
+3. preparar upload de logo
+4. ampliar a matriz de autorização para os demais módulos

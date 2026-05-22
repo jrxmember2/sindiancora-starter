@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\IssueController;
 use App\Http\Controllers\Tenant\LicenseOverviewController;
 use App\Http\Controllers\Tenant\SupplierController;
+use App\Http\Controllers\Tenant\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('login'));
@@ -37,6 +38,9 @@ Route::middleware('auth')->group(function () {
         Route::get('license', LicenseOverviewController::class)->name('tenant.license.show');
 
         Route::middleware(['license.active'])->group(function () {
+            Route::resource('users', UserController::class)
+                ->parameters(['users' => 'companyUser'])
+                ->middleware('module:configuracoes');
             Route::resource('condominiums', CondominiumController::class)->middleware('module:configuracoes');
             Route::resource('suppliers', SupplierController::class)->middleware('module:fornecedores');
             Route::resource('issues', IssueController::class)->middleware('module:chamados');

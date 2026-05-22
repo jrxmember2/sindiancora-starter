@@ -25,7 +25,10 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
 
         if (! $user->isSuperAdmin()) {
-            $company = $user->companies()->wherePivot('status', 'active')->first();
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.status', 'active')
+                ->first();
 
             if ($company) {
                 session(['current_company_id' => $company->id]);

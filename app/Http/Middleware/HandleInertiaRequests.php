@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\Licensing\LicenseGuard;
+use App\Services\Permissions\CompanyPermissionService;
 use App\Services\Tenancy\TenantResolver;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -20,6 +21,8 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user();
         $company = app()->bound('currentCompany') ? app('currentCompany') : null;
         $licenseGuard = app(LicenseGuard::class);
+        $permissionService = app(CompanyPermissionService::class);
+        $membership = ($user && $company) ? $this->tenantResolver->currentCompanyUser($user, $company) : null;
 
         return array_merge(parent::share($request), [
             'auth' => [
@@ -37,11 +40,19 @@ class HandleInertiaRequests extends Middleware
                     'slug' => $company->slug,
                     'status' => $company->status,
                 ] : null,
+                'currentMembership' => $membership ? [
+                    'id' => $membership->id,
+                    'role' => $membership->role,
+                    'status' => $membership->status,
+                    'can_access_whatsapp' => (bool) $membership->can_access_whatsapp,
+                    'only_responsible_issues' => (bool) $membership->only_responsible_issues,
+                ] : null,
                 'companies' => $user ? $this->tenantResolver->companiesForUser($user) : [],
                 'licenseStatus' => $company ? $licenseGuard->status($company) : null,
                 'licenseAlerts' => $company ? $licenseGuard->alerts($company) : [],
                 'licenseUsage' => $company ? $licenseGuard->usage($company) : null,
                 'moduleAccess' => $company ? $licenseGuard->moduleAccessMap($company) : [],
+                'abilities' => ($user && $company) ? $permissionService->abilities($user, $company) : [],
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

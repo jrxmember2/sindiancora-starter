@@ -28,7 +28,29 @@ class LoginRequest extends FormRequest
 
         if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => 'E-mail ou senha invalidos.',
+                'email' => 'E-mail ou senha inválidos.',
+            ]);
+        }
+
+        $user = Auth::user();
+
+        if (! $user) {
+            return;
+        }
+
+        if ($user->status !== 'active') {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Seu usuário está inativo no momento.',
+            ]);
+        }
+
+        if (! $user->isSuperAdmin() && ! $user->companies()->wherePivot('status', 'active')->where('companies.status', 'active')->exists()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Seu acesso não possui vínculo ativo com nenhuma empresa.',
             ]);
         }
     }
